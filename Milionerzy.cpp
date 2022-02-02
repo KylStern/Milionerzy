@@ -15,40 +15,40 @@ mt19937 generator(time(nullptr));
 uniform_int_distribution<int> odp(0, 3);//losowanie odpowiedzi 
 uniform_int_distribution<int> pyt(0, 9);//losowanie pytan
 
-fstream  Historia;//plik do zapisu u¿ytkowników i ich wynikow
-uniform_int_distribution<int> fifty(0, 1);//losowanie kolejnoœci odp prawid³owej i fa³szywej w kole 50/50
-int zwyciestwa = 0;int porazki = 0;//liczniki, zwyciêstwa oznaczaj¹ zdobyte punkty, inna wartoœæ pora¿ek ni¿ 0 oznacza przegran¹ i zakoñczenie gry
-int kolaRatunkowe = 3;//liczba kó³ ratunkowych
-char decyzja;//u¿yta w Menu, okreœla co chce zrobiæ u¿ytkownik
-string uzytkownik;//nazwa u¿ytkownika
-int checGry = 1;//czy u¿ytkownik chce graæ, domyœlnie ustawione na 1, inna wartoœæ przerywa pêtlê 
-string czychcegrac{};//odpowiedŸ u¿ytkownika na pytanie czy chce dalej graæ
-bool CzyChceGrac = true;// jeœli true to gra zaczyna siê od nowa, jeœli false, to wyœwietla siê menu
+fstream  Historia;//plik do zapisu uÅ¼ytkownikÃ³w i ich wynikow
+uniform_int_distribution<int> fifty(0, 1);//losowanie kolejnoÅ›ci odp prawidÅ‚owej i faÅ‚szywej w kole 50/50
+int zwyciestwa = 0;int porazki = 0;//liczniki, zwyciÄ™stwa oznaczajÄ… zdobyte punkty, inna wartoÅ›Ä‡ poraÅ¼ek niÅ¼ 0 oznacza przegranÄ… i zakoÅ„czenie gry
+int kolaRatunkowe = 3;//liczba kÃ³Å‚ ratunkowych
+char decyzja;//uÅ¼yta w Menu, okreÅ›la co chce zrobiÄ‡ uÅ¼ytkownik
+string uzytkownik;//nazwa uÅ¼ytkownika
+int checGry = 1;//czy uÅ¼ytkownik chce graÄ‡, domyÅ›lnie ustawione na 1, inna wartoÅ›Ä‡ przerywa pÄ™tlÄ™ 
+string czychcegrac{};//odpowiedÅº uÅ¼ytkownika na pytanie czy chce dalej graÄ‡
+bool CzyChceGrac = true;// jeÅ›li true to gra zaczyna siÄ™ od nowa, jeÅ›li false, to wyÅ›wietla siÄ™ menu
 
-int powtorzonePytanie;// wartoœæ zmienia siê w funkcjach odpowiedzialnych za wyœwietlanie pytañ, upewnienie ¿e to samo pytanie nie 
-//wyœwietli siê po u¿yciu ko³a "zmiana pytania"
+int powtorzonePytanie;// wartoÅ›Ä‡ zmienia siÄ™ w funkcjach odpowiedzialnych za wyÅ›wietlanie pytaÅ„, upewnienie Å¼e to samo pytanie nie 
+//wyÅ›wietli siÄ™ po uÅ¼yciu koÅ‚a "zmiana pytania"
 
-//komentarze w funkcji pyt1 odnosz¹ siê te¿ do funkcji pyt2, pyt3, ... ,pyt12.
+//komentarze w funkcji pyt1 odnoszÄ… siÄ™ teÅ¼ do funkcji pyt2, pyt3, ... ,pyt12.
 
 void pyt1()
 {
-	int losPytanie;//kwestia bezpieczeñstwa, ustawienie na pocz¹tek du¿ej wartoœci równej powtorzonePytanie
-	losPytanie = pyt(generator);//losowanie numeru pytania (w tym indeksu tablicy pytañ i odpowiedzi)
+	int losPytanie;//kwestia bezpieczeÅ„stwa, ustawienie na poczÄ…tek duÅ¼ej wartoÅ›ci rÃ³wnej powtorzonePytanie
+	losPytanie = pyt(generator);//losowanie numeru pytania (w tym indeksu tablicy pytaÅ„ i odpowiedzi)
 	start:
-	string Pytanie[10]{ "Jaki jest symbol chemiczny potasu?","Jaki jest symbol chemiczny Z³ota?","Autorem 'Potopu', powieœci opowiadaj¹cej o potopie szwedzkim, jest: ","W mitologii greckiej opiekunk¹ ogniska domowego by³a bogini:","W mitologii greckiej z g³owy Zeusa wyskoczy³a: ","W mitologii greckiej bogiem wojny by³:","Najd³uzsza polska rzeka to: ","Ile w Polsce jest województw?","Mo¿na znaæ siê jak dwa ³yse:","Na drzewach nie rosn¹:" };
-	int prawidlowa = odp(generator);//wylosowanie, która odpowiedŸ fa³szywa zostanie zast¹piona
+	string Pytanie[10]{ "Jaki jest symbol chemiczny potasu?","Jaki jest symbol chemiczny ZÅ‚ota?","Autorem 'Potopu', powieÅ›ci opowiadajÄ…cej o potopie szwedzkim, jest: ","W mitologii greckiej opiekunkÄ… ogniska domowego byÅ‚a bogini:","W mitologii greckiej z gÅ‚owy Zeusa wyskoczyÅ‚a: ","W mitologii greckiej bogiem wojny byÅ‚:","NajdÅ‚uzsza polska rzeka to: ","Ile w Polsce jest wojewÃ³dztw?","MoÅ¼na znaÄ‡ siÄ™ jak dwa Å‚yse:","Na drzewach nie rosnÄ…:" };
+	int prawidlowa = odp(generator);//wylosowanie, ktÃ³ra odpowiedÅº faÅ‚szywa zostanie zastÄ…piona
 	int licznik = 0;//indeks odpowiedzi
-	int fifty_fifty;//dla ko³a 50/50
-	int los;//losowanie kolejnoœci pytañ fa³szywych
-	int zamiana;//podpiêcie odpowiedzi u¿ytkownika do inta
-	double bylo[4]{ 5,5,5,5 };//tablica sprawdzaj¹ca, czy wartoœæ los siê powtarza
-	char abcd[4]{ 'a','b','c','d' };	// litery od 'a' do 'b', do wyœwietlenia przy odpowiedziach
-	string pr[10]{ "K",  "Au",  "H. Sienkiewicz",  "Hestia",  "Atena",  "Ares",  "Wis³a",  "16",  "Konie",  "Truskawki", };//odpowiedzi prawid³owe
-	string f1[10]{ "Na","Zn","J. Kochanowski", "Hera", "Persefona", "Kratos", "Odra", "14", "Psy", "Jab³ka", };
-	string f2[10]{ "Au","He","A. Mickiewicz", "Atena", "Hera", "Hermes", "Warta", "15", "Koty", "Œliwki", };
+	int fifty_fifty;//dla koÅ‚a 50/50
+	int los;//losowanie kolejnoÅ›ci pytaÅ„ faÅ‚szywych
+	int zamiana;//podpiÄ™cie odpowiedzi uÅ¼ytkownika do inta
+	double bylo[4]{ 5,5,5,5 };//tablica sprawdzajÄ…ca, czy wartoÅ›Ä‡ los siÄ™ powtarza
+	char abcd[4]{ 'a','b','c','d' };	// litery od 'a' do 'b', do wyÅ›wietlenia przy odpowiedziach
+	string pr[10]{ "K",  "Au",  "H. Sienkiewicz",  "Hestia",  "Atena",  "Ares",  "WisÅ‚a",  "16",  "Konie",  "Truskawki", };//odpowiedzi prawidÅ‚owe
+	string f1[10]{ "Na","Zn","J. Kochanowski", "Hera", "Persefona", "Kratos", "Odra", "14", "Psy", "JabÅ‚ka", };
+	string f2[10]{ "Au","He","A. Mickiewicz", "Atena", "Hera", "Hermes", "Warta", "15", "Koty", "Åšliwki", };
 	string f3[10]{ "P","In","M. Rej", "Artemida", "Afrodyta", "Zeus", "San", "20", "Barany", "Banany", };
-	string f4[10]{ "Pb","Ag","J. Tuwim", "Kora", "Hestia", "Hefajstos", "Bzura", "12", "Wielb³¹dy", "Gruszki", };// f1-f4 odpowiedzi fa³szywe
-	string tab[4]{}; //ta tablica bêdzie wyœwietlana
+	string f4[10]{ "Pb","Ag","J. Tuwim", "Kora", "Hestia", "Hefajstos", "Bzura", "12", "WielbÅ‚Ä…dy", "Gruszki", };// f1-f4 odpowiedzi faÅ‚szywe
+	string tab[4]{}; //ta tablica bÄ™dzie wyÅ›wietlana
 	while (licznik < 4)
 	{
 		los = odp(generator);
@@ -77,10 +77,10 @@ void pyt1()
 			licznik++;
 		}
 	}
-	tab[prawidlowa] = pr[losPytanie]; // zast¹pienie jednej z fa³szywych odpowiedzi prawdziw¹
+	tab[prawidlowa] = pr[losPytanie]; // zastÄ…pienie jednej z faÅ‚szywych odpowiedzi prawdziwÄ…
 	do {
 		pytanie:
-		cout << endl<<"Ko³a ratunkowe: "<< kolaRatunkowe<< endl << endl << "Pytanie 1: " << Pytanie[losPytanie] << endl;
+		cout << endl<<"KoÅ‚a ratunkowe: "<< kolaRatunkowe<< endl << endl << "Pytanie 1: " << Pytanie[losPytanie] << endl;
 		for (int i = 0; i < 4; i++)// wypisanie odpowiedzi
 		{
 			cout << abcd[i] << ") ";
@@ -88,10 +88,10 @@ void pyt1()
 		}
 		if (kolaRatunkowe != 0)
 		{
-			cout << endl << "Wybierz 'k', aby u¿yæ ko³a ratunkowego 50/50. Nie bêdziesz móg³ potem u¿yæ ko³a 'Zmiana pytania'." << endl;
-			cout << "Wybierz 'l', aby u¿yæ ko³a ratunkowego 'Zmiana pytania'. Mo¿esz go u¿yæ wielokrotnie i u¿yæ ko³a 50/50" << endl;
+			cout << endl << "Wybierz 'k', aby uÅ¼yÄ‡ koÅ‚a ratunkowego 50/50. Nie bÄ™dziesz mÃ³gÅ‚ potem uÅ¼yÄ‡ koÅ‚a 'Zmiana pytania'." << endl;
+			cout << "Wybierz 'l', aby uÅ¼yÄ‡ koÅ‚a ratunkowego 'Zmiana pytania'. MoÅ¼esz go uÅ¼yÄ‡ wielokrotnie i uÅ¼yÄ‡ koÅ‚a 50/50" << endl;
 		}
-		cout << endl << "Podaj odpowiedŸ: ";
+		cout << endl << "Podaj odpowiedÅº: ";
 		char odpowiedz;
 		cin >> odpowiedz;
 		
@@ -104,119 +104,119 @@ void pyt1()
 			zamiana = 2;
 		else if (odpowiedz == 'd' || odpowiedz == 'D')
 			zamiana = 3;
-		else if (odpowiedz == 'k' || odpowiedz == 'K') //ko³o ratunkowe 50/50
+		else if (odpowiedz == 'k' || odpowiedz == 'K') //koÅ‚o ratunkowe 50/50
 		{
-			if (kolaRatunkowe != 0) //sprawdzenie czy ko³a ratunkowe s¹ dostepne
+			if (kolaRatunkowe != 0) //sprawdzenie czy koÅ‚a ratunkowe sÄ… dostepne
 			{
 				int rng = prawidlowa;
 				while (rng == prawidlowa||( rng!=bylo[0] && rng != bylo[1] && rng != bylo[2] && rng != bylo[3]))
-					rng = odp(generator);//wylosowanie indeksu odpowiedzi fa³szywej innego ni¿ indeks odpowiedzi prawdziwej,
-				//plus upewnienie siê, ¿eby wczeœniej niewyœwietlona odpowiedŸ siê nie wyœwietli³a
+					rng = odp(generator);//wylosowanie indeksu odpowiedzi faÅ‚szywej innego niÅ¼ indeks odpowiedzi prawdziwej,
+				//plus upewnienie siÄ™, Å¼eby wczeÅ›niej niewyÅ›wietlona odpowiedÅº siÄ™ nie wyÅ›wietliÅ‚a
 				
 				
-				fifty_fifty = fifty(generator);//losowanie miêdzy 0 a 1
-				zamiana = 5; //dla pêtli poni¿ej
-				while (zamiana==5) //zamiana ustawia siê na 5, jeœli nie istnieje odpowiedŸ pdana przez u¿ytkownika
+				fifty_fifty = fifty(generator);//losowanie miÄ™dzy 0 a 1
+				zamiana = 5; //dla pÄ™tli poniÅ¼ej
+				while (zamiana==5) //zamiana ustawia siÄ™ na 5, jeÅ›li nie istnieje odpowiedÅº pdana przez uÅ¼ytkownika
 				{
 					Sleep(1000);
 					system("cls");
 					cout << "Pytanie 1: " << Pytanie[losPytanie] << endl;
-					if (fifty_fifty == 0)//ustalanie koljenoœci odpowiedzi fa³szywej i prawdziewj
+					if (fifty_fifty == 0)//ustalanie koljenoÅ›ci odpowiedzi faÅ‚szywej i prawdziewj
 					{
 						cout << "a) " << pr[losPytanie] << endl;
 						cout << "b) " << tab[rng] << endl;
 						prawidlowa = 0;
 					}
-					else if (fifty_fifty == 1)//tu te¿
+					else if (fifty_fifty == 1)//tu teÅ¼
 					{
 						cout << "a) " << tab[rng] << endl;
 						cout << "b) " << pr[losPytanie] << endl;
 						prawidlowa = 1;
 					}
-						cout << endl << "Podaj odpowiedŸ: ";
+						cout << endl << "Podaj odpowiedÅº: ";
 						cin >> odpowiedz;
 
 					if (odpowiedz == 'a' || odpowiedz == 'A')//sprawdzenie odpowiedzi
 						zamiana = 0;
 					else if (odpowiedz == 'b' || odpowiedz == 'B')
 						zamiana = 1;
-					else if (odpowiedz == 'k' || odpowiedz == 'K')//zapobiegniêcie ponownemu u¿yciu 50/50
+					else if (odpowiedz == 'k' || odpowiedz == 'K')//zapobiegniÄ™cie ponownemu uÅ¼yciu 50/50
 					{
-						zamiana = 5;//powtórzenie pêtli
-						cout << " Ju¿ u¿y³eœ ko³a ratunkowego, spróbuj ponownie!" << endl;
+						zamiana = 5;//powtÃ³rzenie pÄ™tli
+						cout << " JuÅ¼ uÅ¼yÅ‚eÅ› koÅ‚a ratunkowego, sprÃ³buj ponownie!" << endl;
 					}
-					else//odpowiedŸ inna ni¿ oczekiwane
+					else//odpowiedÅº inna niÅ¼ oczekiwane
 					{
-						cout << " Nie ma takiej odpowiedzi, spróbuj ponownie!" << endl;
-						zamiana = 5;//powtórzenie pêtli
+						cout << " Nie ma takiej odpowiedzi, sprÃ³buj ponownie!" << endl;
+						zamiana = 5;//powtÃ³rzenie pÄ™tli
 					}
 					kolaRatunkowe--;
 				}
 				
 			}
-			else //nie ma kó³ ratunkowych
+			else //nie ma kÃ³Å‚ ratunkowych
 			{
-				cout << "Nie masz ju¿ kó³ ratunkowych!" << endl;
+				cout << "Nie masz juÅ¼ kÃ³Å‚ ratunkowych!" << endl;
 				Sleep(1000);
 				system("cls");
 				goto pytanie;
 			}
 		}
-		else if (odpowiedz == 'l' || odpowiedz == 'L')//ko³o ratunkowe "Zmiana pytania"
+		else if (odpowiedz == 'l' || odpowiedz == 'L')//koÅ‚o ratunkowe "Zmiana pytania"
 		{
-			if (kolaRatunkowe > 0)//czy u¿ytkownik ma ko³a ratunkowe
+			if (kolaRatunkowe > 0)//czy uÅ¼ytkownik ma koÅ‚a ratunkowe
 			{
-				powtorzonePytanie = losPytanie;//zapamiêtanie pytania które ju¿ by³o
-				kolaRatunkowe--;//zmniejszenie kó³ ratunkowych
+				powtorzonePytanie = losPytanie;//zapamiÄ™tanie pytania ktÃ³re juÅ¼ byÅ‚o
+				kolaRatunkowe--;//zmniejszenie kÃ³Å‚ ratunkowych
 				system("cls");
 				while (losPytanie == powtorzonePytanie)//wylosowanie innego pytania 
 					losPytanie = pyt(generator);
-				goto start;//funkcja zaczyna siê od nowa, losuj¹c inne pytanie
+				goto start;//funkcja zaczyna siÄ™ od nowa, losujÄ…c inne pytanie
 			}
-			else//u¿ytykownik nie ma kó³ ratunkowych
+			else//uÅ¼ytykownik nie ma kÃ³Å‚ ratunkowych
 			{
-				cout << "Nie masz ju¿ kó³ ratunkowych!";
+				cout << "Nie masz juÅ¼ kÃ³Å‚ ratunkowych!";
 				Sleep(2000);
 				system("cls");
-				goto pytanie;//powrót do pytania
+				goto pytanie;//powrÃ³t do pytania
 			}
 		}
 		else
-			zamiana = 5;// pêtla wykona siê od nowa
+			zamiana = 5;// pÄ™tla wykona siÄ™ od nowa
 
-		if (zamiana == prawidlowa)//czy przekonwertowana odpowiedŸ zgadza siê z odp prawid³ow¹
+		if (zamiana == prawidlowa)//czy przekonwertowana odpowiedÅº zgadza siÄ™ z odp prawidÅ‚owÄ…
 		{
-			cout << endl << "Dobra odpowiedŸ!" << endl << endl;
+			cout << endl << "Dobra odpowiedÅº!" << endl << endl;
 			zwyciestwa++;
 		}
 		else if (zamiana == 5)
-			cout << "Nie ma takiej odpowiedzi! Spróbuj ponownie" << endl;
-		else//powiadomienie o z³ej odpowiedzi i wyœwitlenie poprawnej
+			cout << "Nie ma takiej odpowiedzi! SprÃ³buj ponownie" << endl;
+		else//powiadomienie o zÅ‚ej odpowiedzi i wyÅ›witlenie poprawnej
 		{
-			cout <<endl<< "Z³a odpowiedŸ!" << endl << endl;
-			cout << "Poprawna odpowiedŸ: "<< pr[losPytanie] << endl;
+			cout <<endl<< "ZÅ‚a odpowiedÅº!" << endl << endl;
+			cout << "Poprawna odpowiedÅº: "<< pr[losPytanie] << endl;
 			porazki++;
 			Sleep(1000);
 		}
 		Sleep(2000);
 		system("cls");
-	} while (zamiana == 5);// warunek powtarzania pêtli
-	powtorzonePytanie = 30;//ustawienie wartoœci z powrotem, by wszystkie 10 pytañ w nastêpnej funkcji mog³o byæ wylosowane 
+	} while (zamiana == 5);// warunek powtarzania pÄ™tli
+	powtorzonePytanie = 30;//ustawienie wartoÅ›ci z powrotem, by wszystkie 10 pytaÅ„ w nastÄ™pnej funkcji mogÅ‚o byÄ‡ wylosowane 
 }
 void pyt2()
 {
 	int losPytanie;
 	losPytanie = pyt(generator);
 	start:
-	string Pytanie[10]{ "W którym roku rozpoczê³a siê I wojna œwiatowa?","Pierwszym cz³owiekiem na Ksiê¿ycu by³:","Pi¹ta planeta od S³oñca to:","Nazwa naszej galaktyki to:","Drzewem liœciastym nie jest:","Kontynentów jest: ","Które pañstwo nie ma dostêpu do morza?","Napoleon pochodzi³ z:","Egipski bóg umar³ych Anubis mia³ g³owê:","Brylant to oszlifowany:" };
+	string Pytanie[10]{ "W ktÃ³rym roku rozpoczÄ™Å‚a siÄ™ I wojna Å›wiatowa?","Pierwszym czÅ‚owiekiem na KsiÄ™Å¼ycu byÅ‚:","PiÄ…ta planeta od SÅ‚oÅ„ca to:","Nazwa naszej galaktyki to:","Drzewem liÅ›ciastym nie jest:","KontynentÃ³w jest: ","KtÃ³re paÅ„stwo nie ma dostÄ™pu do morza?","Napoleon pochodziÅ‚ z:","Egipski bÃ³g umarÅ‚ych Anubis miaÅ‚ gÅ‚owÄ™:","Brylant to oszlifowany:" };
 	int prawidlowa = odp(generator);
 	int licznik = 0, fifty_fifty;
 	int zamiana, bylo[4]{ 5,5,5,5 };
 	char abcd[4]{ 'a','b','c','d' };
 	string pr[10]{ "1914",  "Neil Armstrong",  "Jowisz",  "Droga Mleczna",  "Modrzew",  "7",  "Czechy",  "Francji",  "Szakala",  "Diament", };
-	string f1[10]{ "1918","Buzz Aldrin","Ziemia", "Andromeda", "Klon", "5", "Polska", "W³och", "Kota", "Rubin", };
-	string f2[10]{ "1939","Michael Collins","Mars", "S³oneczna", "Brzoza", "8", "Rosja", "Rosji", "Sepa", "Szmaragd", };
-	string f3[10]{ "1908","John F. Kennedy","Pluton", "Czarna Dziura", "Jab³oñ", "6", "W³ochy", "Hiszpanii", "Krokodyla", "Topaz", };
+	string f1[10]{ "1918","Buzz Aldrin","Ziemia", "Andromeda", "Klon", "5", "Polska", "WÅ‚och", "Kota", "Rubin", };
+	string f2[10]{ "1939","Michael Collins","Mars", "SÅ‚oneczna", "Brzoza", "8", "Rosja", "Rosji", "Sepa", "Szmaragd", };
+	string f3[10]{ "1908","John F. Kennedy","Pluton", "Czarna Dziura", "JabÅ‚oÅ„", "6", "WÅ‚ochy", "Hiszpanii", "Krokodyla", "Topaz", };
 	string f4[10]{ "1932","George Gallup","Neptun", "Droga Kakaowa", "Orzech", "9", "Hiszpania", "Wielkiej Brytanii", "Sowy", "Szafir", };
 	string tab[4]{};
 	while (licznik < 4)
@@ -251,8 +251,8 @@ void pyt2()
 	tab[prawidlowa] = pr[losPytanie];
 	do {
 		pytanie:
-		cout << "Zdobyta suma pieniêdzy: 500z³" << endl << endl;
-		cout << endl << "Ko³a ratunkowe: " << kolaRatunkowe << endl << endl << "Pytanie 2: " << Pytanie[losPytanie] << endl;
+		cout << "Zdobyta suma pieniÄ™dzy: 500zÅ‚" << endl << endl;
+		cout << endl << "KoÅ‚a ratunkowe: " << kolaRatunkowe << endl << endl << "Pytanie 2: " << Pytanie[losPytanie] << endl;
 		
 
 		for (int i = 0; i < 4; i++)
@@ -262,10 +262,10 @@ void pyt2()
 		}
 		if (kolaRatunkowe != 0)
 		{
-			cout << endl << "Wybierz 'k', aby u¿yæ ko³a ratunkowego 50/50. Nie bêdziesz móg³ potem u¿yæ ko³a 'Zmiana pytania'." << endl;
-			cout << "Wybierz 'l', aby u¿yæ ko³a ratunkowego 'Zmiana pytania'. Mo¿esz go u¿yæ wielokrotnie i u¿yæ ko³a 50/50" << endl;
+			cout << endl << "Wybierz 'k', aby uÅ¼yÄ‡ koÅ‚a ratunkowego 50/50. Nie bÄ™dziesz mÃ³gÅ‚ potem uÅ¼yÄ‡ koÅ‚a 'Zmiana pytania'." << endl;
+			cout << "Wybierz 'l', aby uÅ¼yÄ‡ koÅ‚a ratunkowego 'Zmiana pytania'. MoÅ¼esz go uÅ¼yÄ‡ wielokrotnie i uÅ¼yÄ‡ koÅ‚a 50/50" << endl;
 		}
-		cout << endl << "Podaj odpowiedŸ: ";
+		cout << endl << "Podaj odpowiedÅº: ";
 		char odpowiedz;
 		cin >> odpowiedz;
 
@@ -292,7 +292,7 @@ void pyt2()
 				{
 					Sleep(1000);
 					system("cls");
-					cout << "Zdobyta suma pieniêdzy: 500z³" << endl << endl;
+					cout << "Zdobyta suma pieniÄ™dzy: 500zÅ‚" << endl << endl;
 					cout << "Pytanie 2: " << Pytanie[losPytanie] << endl;
 					if (fifty_fifty == 0)
 					{
@@ -306,7 +306,7 @@ void pyt2()
 						cout << "b) " << pr[losPytanie] << endl;
 						prawidlowa = 1;
 					}
-					cout << endl << "Podaj odpowiedŸ: ";
+					cout << endl << "Podaj odpowiedÅº: ";
 					cin >> odpowiedz;
 
 					if (odpowiedz == 'a' || odpowiedz == 'A')
@@ -316,11 +316,11 @@ void pyt2()
 					else if (odpowiedz == 'k' || odpowiedz == 'K')
 					{
 						zamiana = 5;
-						cout << " Ju¿ u¿y³eœ ko³a ratunkowego, spróbuj ponownie!" << endl;
+						cout << " JuÅ¼ uÅ¼yÅ‚eÅ› koÅ‚a ratunkowego, sprÃ³buj ponownie!" << endl;
 					}
 					else
 					{
-						cout << " Nie ma takiej odpowiedzi, spróbuj ponownie!" << endl;
+						cout << " Nie ma takiej odpowiedzi, sprÃ³buj ponownie!" << endl;
 						zamiana = 5;
 					}
 					kolaRatunkowe--;
@@ -329,7 +329,7 @@ void pyt2()
 			}
 			else
 			{
-				cout << "Nie masz ju¿ kó³ ratunkowych!" << endl;
+				cout << "Nie masz juÅ¼ kÃ³Å‚ ratunkowych!" << endl;
 				Sleep(1000);
 				system("cls");
 				goto pytanie;
@@ -348,7 +348,7 @@ void pyt2()
 			}
 			else
 			{
-				cout << "Nie masz ju¿ kó³ ratunkowych!";
+				cout << "Nie masz juÅ¼ kÃ³Å‚ ratunkowych!";
 				Sleep(2000);
 				system("cls");
 				goto pytanie;
@@ -359,15 +359,15 @@ void pyt2()
 
 		if (zamiana == prawidlowa)
 		{
-			cout << endl << "Dobra odpowiedŸ!" << endl << endl;
+			cout << endl << "Dobra odpowiedÅº!" << endl << endl;
 			zwyciestwa++;
 		}
 		else if (zamiana == 5)
-			cout << "Nie ma takiej odpowiedzi! Spróbuj ponownie" << endl;
+			cout << "Nie ma takiej odpowiedzi! SprÃ³buj ponownie" << endl;
 		else
 		{
-			cout << endl << "Z³a odpowiedŸ!" << endl << endl;
-			cout << "Poprawna odpowiedŸ: " << pr[losPytanie] << endl;
+			cout << endl << "ZÅ‚a odpowiedÅº!" << endl << endl;
+			cout << "Poprawna odpowiedÅº: " << pr[losPytanie] << endl;
 			porazki++;
 			Sleep(1000);
 		}
@@ -381,16 +381,16 @@ void pyt3()
 	int losPytanie;
 	losPytanie = pyt(generator);
 	start:
-	string Pytanie[10]{ "Do ilu mórz ma dostêp Finlandia?","Jak nazywa siê chorobliwy lêk przed ogniem?","Jak nazywa siê urzêdnik stoj¹cy na czele powiatu?","Kiedy zaton¹³ Titanic?","Którego utworu nie napisa³ Szekspir?","W którym roku Krzysztof Kolumb odkry³ Ameryke?","Czyja wyprawa jako pierwsza op³ynê³a glob?","Wynalazc¹ druku jest: ","Ile stóp ma metr?","Jak ma na imiê g³ówny bohater serii ksi¹¿ek o wiedŸminie Andrzeja Sapkowskiego?" };
+	string Pytanie[10]{ "Do ilu mÃ³rz ma dostÄ™p Finlandia?","Jak nazywa siÄ™ chorobliwy lÄ™k przed ogniem?","Jak nazywa siÄ™ urzÄ™dnik stojÄ…cy na czele powiatu?","Kiedy zatonÄ…Å‚ Titanic?","KtÃ³rego utworu nie napisaÅ‚ Szekspir?","W ktÃ³rym roku Krzysztof Kolumb odkryÅ‚ Ameryke?","Czyja wyprawa jako pierwsza opÅ‚ynÄ™Å‚a glob?","WynalazcÄ… druku jest: ","Ile stÃ³p ma metr?","Jak ma na imiÄ™ gÅ‚Ã³wny bohater serii ksiÄ…Å¼ek o wiedÅºminie Andrzeja Sapkowskiego?" };
 	int prawidlowa = odp(generator);
 	int licznik = 0, fifty_fifty;
 	int los, zamiana, bylo[4]{ 5,5,5,5 };
 	char abcd[4]{ 'a','b','c','d' };
-	string pr[10]{ "Jednego",  "Pirofobia",  "Starosta",  "W pierwszej po³owie XX wieku",  "Zemsta",  "1492",  "Ferdynanda Magellana",  "Jan Gutenberg",  "Oko³o 3",  "Geralt", };
-	string f1[10]{ "Dwóch","Arachnofobia","So³tys", "W drugiej po³owie XVIII wieku", "Hamlet", "1410", "Krzysztofa Kolumba", "Marcin Luter", "Oko³o 4", "Gerard", };
-	string f2[10]{ "Trzech","Aerofobia","Wójt", "W pierwszej po³owie XIX wieku", "Romeo i Julia", "1502", "Marco Polo", "Leonardo da Vinci", "Oko³o 2", "Gerart", };
-	string f3[10]{ "Czterech","Duxofobia","Burmistrz", "W drugiej po³owie XIX wieku", "Makbet", "1452", "Vasco Da Gama", "Galileusz", "Oko³o 6", "Gelart", };
-	string f4[10]{ "¯adnego","Agorafobia","Prezydent", "W drugiej po³owie XX wieku", "Sen nocy letniej", "1499", "James Cook", "Jan Kalwin", "Oko³o 5", "Gelard", };
+	string pr[10]{ "Jednego",  "Pirofobia",  "Starosta",  "W pierwszej poÅ‚owie XX wieku",  "Zemsta",  "1492",  "Ferdynanda Magellana",  "Jan Gutenberg",  "OkoÅ‚o 3",  "Geralt", };
+	string f1[10]{ "DwÃ³ch","Arachnofobia","SoÅ‚tys", "W drugiej poÅ‚owie XVIII wieku", "Hamlet", "1410", "Krzysztofa Kolumba", "Marcin Luter", "OkoÅ‚o 4", "Gerard", };
+	string f2[10]{ "Trzech","Aerofobia","WÃ³jt", "W pierwszej poÅ‚owie XIX wieku", "Romeo i Julia", "1502", "Marco Polo", "Leonardo da Vinci", "OkoÅ‚o 2", "Gerart", };
+	string f3[10]{ "Czterech","Duxofobia","Burmistrz", "W drugiej poÅ‚owie XIX wieku", "Makbet", "1452", "Vasco Da Gama", "Galileusz", "OkoÅ‚o 6", "Gelart", };
+	string f4[10]{ "Å»adnego","Agorafobia","Prezydent", "W drugiej poÅ‚owie XX wieku", "Sen nocy letniej", "1499", "James Cook", "Jan Kalwin", "OkoÅ‚o 5", "Gelard", };
 	string tab[4]{};
 	while (licznik < 4)
 	{
@@ -424,8 +424,8 @@ void pyt3()
 	tab[prawidlowa] = pr[losPytanie];
 	do {
 		pytanie:
-		cout << "Zdobyta suma pieniêdzy: 1000z³. Kwota gwarantowana: 1000z³" << endl << endl;
-		cout << endl << "Ko³a ratunkowe: " << kolaRatunkowe << endl << endl << "Pytanie 3: " << Pytanie[losPytanie] <<endl;
+		cout << "Zdobyta suma pieniÄ™dzy: 1000zÅ‚. Kwota gwarantowana: 1000zÅ‚" << endl << endl;
+		cout << endl << "KoÅ‚a ratunkowe: " << kolaRatunkowe << endl << endl << "Pytanie 3: " << Pytanie[losPytanie] <<endl;
 		
 
 		for (int i = 0; i < 4; i++)
@@ -435,10 +435,10 @@ void pyt3()
 		}
 		if (kolaRatunkowe != 0)
 		{
-			cout << endl << "Wybierz 'k', aby u¿yæ ko³a ratunkowego 50/50. Nie bêdziesz móg³ potem u¿yæ ko³a 'Zmiana pytania'." << endl;
-			cout << "Wybierz 'l', aby u¿yæ ko³a ratunkowego 'Zmiana pytania'. Mo¿esz go u¿yæ wielokrotnie i u¿yæ ko³a 50/50" << endl;
+			cout << endl << "Wybierz 'k', aby uÅ¼yÄ‡ koÅ‚a ratunkowego 50/50. Nie bÄ™dziesz mÃ³gÅ‚ potem uÅ¼yÄ‡ koÅ‚a 'Zmiana pytania'." << endl;
+			cout << "Wybierz 'l', aby uÅ¼yÄ‡ koÅ‚a ratunkowego 'Zmiana pytania'. MoÅ¼esz go uÅ¼yÄ‡ wielokrotnie i uÅ¼yÄ‡ koÅ‚a 50/50" << endl;
 		}
-		cout << endl << "Podaj odpowiedŸ: ";
+		cout << endl << "Podaj odpowiedÅº: ";
 		char odpowiedz;
 		cin >> odpowiedz;
 
@@ -465,7 +465,7 @@ void pyt3()
 				{
 					Sleep(1000);
 					system("cls");
-					cout << "Zdobyta suma pieniêdzy: 1000z³. Kwota gwarantowana: 1000z³" << endl << endl;
+					cout << "Zdobyta suma pieniÄ™dzy: 1000zÅ‚. Kwota gwarantowana: 1000zÅ‚" << endl << endl;
 					cout << "Pytanie 3: " << Pytanie[losPytanie] << endl;
 					if (fifty_fifty == 0)
 					{
@@ -479,7 +479,7 @@ void pyt3()
 						cout << "b) " << pr[losPytanie] << endl;
 						prawidlowa = 1;
 					}
-					cout << endl << "Podaj odpowiedŸ: ";
+					cout << endl << "Podaj odpowiedÅº: ";
 					cin >> odpowiedz;
 
 					if (odpowiedz == 'a' || odpowiedz == 'A')
@@ -489,11 +489,11 @@ void pyt3()
 					else if (odpowiedz == 'k' || odpowiedz == 'K')
 					{
 						zamiana = 5;
-						cout << " Ju¿ u¿y³eœ ko³a ratunkowego, spróbuj ponownie!" << endl;
+						cout << " JuÅ¼ uÅ¼yÅ‚eÅ› koÅ‚a ratunkowego, sprÃ³buj ponownie!" << endl;
 					}
 					else
 					{
-						cout << " Nie ma takiej odpowiedzi, spróbuj ponownie!" << endl;
+						cout << " Nie ma takiej odpowiedzi, sprÃ³buj ponownie!" << endl;
 						zamiana = 5;
 					}
 					kolaRatunkowe--;
@@ -502,7 +502,7 @@ void pyt3()
 			}
 			else
 			{
-				cout << "Nie masz ju¿ kó³ ratunkowych!" << endl;
+				cout << "Nie masz juÅ¼ kÃ³Å‚ ratunkowych!" << endl;
 				Sleep(1000);
 				system("cls");
 				goto pytanie;
@@ -521,7 +521,7 @@ void pyt3()
 			}
 			else
 			{
-				cout << "Nie masz ju¿ kó³ ratunkowych!";
+				cout << "Nie masz juÅ¼ kÃ³Å‚ ratunkowych!";
 				Sleep(2000);
 				system("cls");
 				goto pytanie;
@@ -532,15 +532,15 @@ void pyt3()
 
 		if (zamiana == prawidlowa)
 		{
-			cout << endl << "Dobra odpowiedŸ!" << endl << endl;
+			cout << endl << "Dobra odpowiedÅº!" << endl << endl;
 			zwyciestwa++;
 		}
 		else if (zamiana == 5)
-			cout << "Nie ma takiej odpowiedzi! Spróbuj ponownie" << endl;
+			cout << "Nie ma takiej odpowiedzi! SprÃ³buj ponownie" << endl;
 		else
 		{
-			cout << endl << "Z³a odpowiedŸ!" << endl << endl;
-			cout << "Poprawna odpowiedŸ: " << pr[losPytanie] << endl;
+			cout << endl << "ZÅ‚a odpowiedÅº!" << endl << endl;
+			cout << "Poprawna odpowiedÅº: " << pr[losPytanie] << endl;
 			porazki++;
 			Sleep(1000);
 		}
@@ -554,16 +554,16 @@ void pyt4()
 	int losPytanie;
 	losPytanie = pyt(generator);
 start:
-	string Pytanie[10]{ "Symbolem Szkocji jest:","Jak Harry Potter nazwa³ swoj¹ sowê?","Gdzie znajduje sie Stonehenge","Kto jest tworc¹ postaci Pana Kleksa?","Ile kó³ ma rydwan","W którym województwie le¿y Ko³obrzeg?","Wellington jest stolic¹ którego pañstwa?","Drugim najwy¿szym szczytem na Ziemii jest: ","Jak nazywa siê najbardziej zasolone jezioro na Ziemii?","Ile w Biblii by³o plag egipskich? " };
+	string Pytanie[10]{ "Symbolem Szkocji jest:","Jak Harry Potter nazwaÅ‚ swojÄ… sowÄ™?","Gdzie znajduje sie Stonehenge","Kto jest tworcÄ… postaci Pana Kleksa?","Ile kÃ³Å‚ ma rydwan","W ktÃ³rym wojewÃ³dztwie leÅ¼y KoÅ‚obrzeg?","Wellington jest stolicÄ… ktÃ³rego paÅ„stwa?","Drugim najwyÅ¼szym szczytem na Ziemii jest: ","Jak nazywa siÄ™ najbardziej zasolone jezioro na Ziemii?","Ile w Biblii byÅ‚o plag egipskich? " };
 	int prawidlowa = odp(generator);
 	int licznik = 0, fifty_fifty;
 	int los, zamiana, bylo[4]{ 5,5,5,5 };
 	char abcd[4]{ 'a','b','c','d' };
 	string pr[10]{ "Koniczyna",  "Hedwiga",  "W Wielkiej Brytanii",  "Jan Brzechwa",  "Dwa",  "W zachodniopomorskim",  "Nowej Zelandii",  "K2",  "Morze Martwe",  "10", };
 	string f1[10]{ "Mlecz","Hagrida","W Irlandii", "Julian Tuwim ", "Cztery", "W mazowieckim", "Irlandii", "Mount Everest", "Jezioro Aralskie", "13", };
-	string f2[10]{ "Ró¿a","Hermiona","We Francji", "Henryk Sienkiewicz", "Piêæ", "W malopolskim", "Islandii", "Mont Blanc", "Jezioro Bodeñskie", "7", };
-	string f3[10]{ "Oset","Przepiórka","W Islandii", "Maria Konopnicka", "Szeœæ", "W lubelskim", "Albanii", "Góra Koœciuszki", "Morze Kaspijskie", "8", };
-	string f4[10]{ "Pokrzywa","W³ochatka","W Australii", "Adam Mickiewicz", "Trzy", "W kujawsko-pomorskim", "Australii", "Kilimand¿aro", "Jezioro ¯ywieckie", "5", };
+	string f2[10]{ "RÃ³Å¼a","Hermiona","We Francji", "Henryk Sienkiewicz", "PiÄ™Ä‡", "W malopolskim", "Islandii", "Mont Blanc", "Jezioro BodeÅ„skie", "7", };
+	string f3[10]{ "Oset","PrzepiÃ³rka","W Islandii", "Maria Konopnicka", "SzeÅ›Ä‡", "W lubelskim", "Albanii", "GÃ³ra KoÅ›ciuszki", "Morze Kaspijskie", "8", };
+	string f4[10]{ "Pokrzywa","WÅ‚ochatka","W Australii", "Adam Mickiewicz", "Trzy", "W kujawsko-pomorskim", "Australii", "KilimandÅ¼aro", "Jezioro Å»ywieckie", "5", };
 	string tab[4]{};
 	while (licznik < 4)
 	{
@@ -597,8 +597,8 @@ start:
 	tab[prawidlowa] = pr[losPytanie];
 	do {
 		pytanie:
-		cout << "Zdobyta suma pieniêdzy: 2000z³. Kwota gwarantowana: 1000z³" << endl << endl;
-		cout << endl << "Ko³a ratunkowe: " << kolaRatunkowe << endl << endl << "Pytanie 4: " << Pytanie[losPytanie] << endl;
+		cout << "Zdobyta suma pieniÄ™dzy: 2000zÅ‚. Kwota gwarantowana: 1000zÅ‚" << endl << endl;
+		cout << endl << "KoÅ‚a ratunkowe: " << kolaRatunkowe << endl << endl << "Pytanie 4: " << Pytanie[losPytanie] << endl;
 		
 		for (int i = 0; i < 4; i++)
 		{
@@ -607,10 +607,10 @@ start:
 		}
 		if (kolaRatunkowe != 0)
 		{
-			cout << endl << "Wybierz 'k', aby u¿yæ ko³a ratunkowego 50/50. Nie bêdziesz móg³ potem u¿yæ ko³a 'Zmiana pytania'." << endl;
-			cout << "Wybierz 'l', aby u¿yæ ko³a ratunkowego 'Zmiana pytania'. Mo¿esz go u¿yæ wielokrotnie i u¿yæ ko³a 50/50" << endl;
+			cout << endl << "Wybierz 'k', aby uÅ¼yÄ‡ koÅ‚a ratunkowego 50/50. Nie bÄ™dziesz mÃ³gÅ‚ potem uÅ¼yÄ‡ koÅ‚a 'Zmiana pytania'." << endl;
+			cout << "Wybierz 'l', aby uÅ¼yÄ‡ koÅ‚a ratunkowego 'Zmiana pytania'. MoÅ¼esz go uÅ¼yÄ‡ wielokrotnie i uÅ¼yÄ‡ koÅ‚a 50/50" << endl;
 		}
-		cout << endl << "Podaj odpowiedŸ: ";
+		cout << endl << "Podaj odpowiedÅº: ";
 		char odpowiedz;
 		cin >> odpowiedz;
 
@@ -637,7 +637,7 @@ start:
 				{
 					Sleep(1000);
 					system("cls");
-					cout << "Zdobyta suma pieniêdzy: 2000z³. Kwota gwarantowana: 1000z³" << endl << endl;
+					cout << "Zdobyta suma pieniÄ™dzy: 2000zÅ‚. Kwota gwarantowana: 1000zÅ‚" << endl << endl;
 					cout << "Pytanie 4: " << Pytanie[losPytanie]  << endl;
 					if (fifty_fifty == 0)
 					{
@@ -651,7 +651,7 @@ start:
 						cout << "b) " << pr[losPytanie] << endl;
 						prawidlowa = 1;
 					}
-					cout << endl << "Podaj odpowiedŸ: ";
+					cout << endl << "Podaj odpowiedÅº: ";
 					cin >> odpowiedz;
 
 					if (odpowiedz == 'a' || odpowiedz == 'A')
@@ -661,11 +661,11 @@ start:
 					else if (odpowiedz == 'k' || odpowiedz == 'K')
 					{
 						zamiana = 5;
-						cout << " Ju¿ u¿y³es ko³a ratunkowego, spróbuj ponownie!" << endl;
+						cout << " JuÅ¼ uÅ¼yÅ‚es koÅ‚a ratunkowego, sprÃ³buj ponownie!" << endl;
 					}
 					else
 					{
-						cout << " Nie ma takiej odpowiedzi, spróbuj ponownie!" << endl;
+						cout << " Nie ma takiej odpowiedzi, sprÃ³buj ponownie!" << endl;
 						zamiana = 5;
 					}
 					kolaRatunkowe--;
@@ -674,7 +674,7 @@ start:
 			}
 			else
 			{
-				cout << "Nie masz ju¿ kó³ ratunkowych!" << endl;
+				cout << "Nie masz juÅ¼ kÃ³Å‚ ratunkowych!" << endl;
 				Sleep(1000);
 				system("cls");
 				goto pytanie;
@@ -693,7 +693,7 @@ start:
 			}
 			else
 			{
-				cout << "Nie masz ju¿ kó³ ratunkowych!";
+				cout << "Nie masz juÅ¼ kÃ³Å‚ ratunkowych!";
 				Sleep(2000);
 				system("cls");
 				goto pytanie;
@@ -704,15 +704,15 @@ start:
 
 		if (zamiana == prawidlowa)
 		{
-			cout << endl << "Dobra odpowiedŸ!" << endl << endl;
+			cout << endl << "Dobra odpowiedÅº!" << endl << endl;
 			zwyciestwa++;
 		}
 		else if (zamiana == 5)
-			cout << "Nie ma takiej odpowiedzi! Spróbuj ponownie" << endl;
+			cout << "Nie ma takiej odpowiedzi! SprÃ³buj ponownie" << endl;
 		else
 		{
-			cout << endl << "Z³a odpowiedŸ!" << endl << endl;
-			cout << "Poprawna odpowiedŸ: " << pr[losPytanie] << endl;
+			cout << endl << "ZÅ‚a odpowiedÅº!" << endl << endl;
+			cout << "Poprawna odpowiedÅº: " << pr[losPytanie] << endl;
 			porazki++;
 			Sleep(1000);
 		}
@@ -727,16 +727,16 @@ void pyt5()
 	int losPytanie;
 	losPytanie = pyt(generator);
 start:
-	string Pytanie[10]{ "Stolic¹ Maroko jest:","Jaka waluta obowi¹zuje na Wêgrzech?","G³ówny bohater 'Ferdydurke' W. Gombrowicza nazywa³ siê:","Która z podanych chorób NIE jest chorob¹ wirusow¹?","Kraj Kwitn¹cej Wiœni to: ","Inkowie ¿yli w:","Stolic¹ Lotaryngii jest:","Wojna stuletna toczy³a siê miêdzy Francj¹, a:","Sma¿one kulki albo kotleciki z ciecierzycy lub bobu z sezamem to:","Noc Kryszta³owa mia³a miejsce w/we:" };
+	string Pytanie[10]{ "StolicÄ… Maroko jest:","Jaka waluta obowiÄ…zuje na WÄ™grzech?","GÅ‚Ã³wny bohater 'Ferdydurke' W. Gombrowicza nazywaÅ‚ siÄ™:","KtÃ³ra z podanych chorÃ³b NIE jest chorobÄ… wirusowÄ…?","Kraj KwitnÄ…cej WiÅ›ni to: ","Inkowie Å¼yli w:","StolicÄ… Lotaryngii jest:","Wojna stuletna toczyÅ‚a siÄ™ miÄ™dzy FrancjÄ…, a:","SmaÅ¼one kulki albo kotleciki z ciecierzycy lub bobu z sezamem to:","Noc KrysztaÅ‚owa miaÅ‚a miejsce w/we:" };
 	int prawidlowa = odp(generator);
 	int licznik = 0, fifty_fifty;
 	int los, zamiana, bylo[4]{ 5,5,5,5 };
 	char abcd[4]{ 'a','b','c','d' };
-	string pr[10]{ "Rabat",  "Forint",  "Józio Kowalski",  "Angina",  "Japonia",  "Ameryce Po³udniowej",  "Metz",  "Angli¹",  "Falafel",  "Niemczech", };
-	string f1[10]{ "Ankara","Korona Wêgierska","Jan Kowalski", "Ospa wietrzna", "Chiny", "Ameryce Pó³nocnej", "Cannes", "Hiszpani¹", "Kebab", "W³oszech", };
-	string f2[10]{ "Burkina Faso","Marka Wêgierska","Staœ Tarkowski", "Grypa", "Singapur", "Afryce", "Reims", "Polsk¹", "Kuskus", "Francji", };
-	string f3[10]{ "Kair","Euro","Olaf Pimka", "Œwinka", "Korea Po³udniowa", "Europie", "Nicea", "Niemcami", "Tabbouleh", "Czechach", };
-	string f4[10]{ "Maroko","Kuna","Ryszard Miœ", "Ró¿yczka", "Nepal", "Australii", "Nancy", "Portugali¹", "Kotlet mielony", "Wielkiej Brytanii", };
+	string pr[10]{ "Rabat",  "Forint",  "JÃ³zio Kowalski",  "Angina",  "Japonia",  "Ameryce PoÅ‚udniowej",  "Metz",  "AngliÄ…",  "Falafel",  "Niemczech", };
+	string f1[10]{ "Ankara","Korona WÄ™gierska","Jan Kowalski", "Ospa wietrzna", "Chiny", "Ameryce PÃ³Å‚nocnej", "Cannes", "HiszpaniÄ…", "Kebab", "WÅ‚oszech", };
+	string f2[10]{ "Burkina Faso","Marka WÄ™gierska","StaÅ› Tarkowski", "Grypa", "Singapur", "Afryce", "Reims", "PolskÄ…", "Kuskus", "Francji", };
+	string f3[10]{ "Kair","Euro","Olaf Pimka", "Åšwinka", "Korea PoÅ‚udniowa", "Europie", "Nicea", "Niemcami", "Tabbouleh", "Czechach", };
+	string f4[10]{ "Maroko","Kuna","Ryszard MiÅ›", "RÃ³Å¼yczka", "Nepal", "Australii", "Nancy", "PortugaliÄ…", "Kotlet mielony", "Wielkiej Brytanii", };
 	string tab[4]{};
 	while (licznik < 4)
 	{
@@ -770,8 +770,8 @@ start:
 	tab[prawidlowa] = pr[losPytanie];
 	do {
 		pytanie:
-		cout << "Zdobyta suma pieniêdzy: 5000z³. Kwota gwarantowana: 1000z³" << endl << endl;
-		cout << endl << "Ko³a ratunkowe: " << kolaRatunkowe << endl << endl << "Pytanie 5: " << Pytanie[losPytanie] << endl;
+		cout << "Zdobyta suma pieniÄ™dzy: 5000zÅ‚. Kwota gwarantowana: 1000zÅ‚" << endl << endl;
+		cout << endl << "KoÅ‚a ratunkowe: " << kolaRatunkowe << endl << endl << "Pytanie 5: " << Pytanie[losPytanie] << endl;
 		
 
 		for (int i = 0; i < 4; i++)
@@ -781,10 +781,10 @@ start:
 		}
 		if (kolaRatunkowe != 0)
 		{
-			cout << endl << "Wybierz 'k', aby u¿yæ ko³a ratunkowego 50/50. Nie bêdziesz móg³ potem u¿yæ ko³a 'Zmiana pytania'." << endl;
-			cout << "Wybierz 'l', aby u¿yæ ko³a ratunkowego 'Zmiana pytania'. Mo¿esz go u¿yæ wielokrotnie i u¿yæ ko³a 50/50" << endl;
+			cout << endl << "Wybierz 'k', aby uÅ¼yÄ‡ koÅ‚a ratunkowego 50/50. Nie bÄ™dziesz mÃ³gÅ‚ potem uÅ¼yÄ‡ koÅ‚a 'Zmiana pytania'." << endl;
+			cout << "Wybierz 'l', aby uÅ¼yÄ‡ koÅ‚a ratunkowego 'Zmiana pytania'. MoÅ¼esz go uÅ¼yÄ‡ wielokrotnie i uÅ¼yÄ‡ koÅ‚a 50/50" << endl;
 		}
-		cout << endl << "Podaj odpowiedŸ: ";
+		cout << endl << "Podaj odpowiedÅº: ";
 		char odpowiedz;
 		cin >> odpowiedz;
 
@@ -811,7 +811,7 @@ start:
 				{
 					Sleep(1000);
 					system("cls");
-					cout << "Zdobyta suma pieniêdzy: 5000z³. Kwota gwarantowana: 1000z³" << endl << endl;
+					cout << "Zdobyta suma pieniÄ™dzy: 5000zÅ‚. Kwota gwarantowana: 1000zÅ‚" << endl << endl;
 					cout << "Pytanie 5: " << Pytanie[losPytanie] <<  endl;
 					if (fifty_fifty == 0)
 					{
@@ -825,7 +825,7 @@ start:
 						cout << "b) " << pr[losPytanie] << endl;
 						prawidlowa = 1;
 					}
-					cout << endl << "Podaj odpowiedŸ: ";
+					cout << endl << "Podaj odpowiedÅº: ";
 					cin >> odpowiedz;
 
 					if (odpowiedz == 'a' || odpowiedz == 'A')
@@ -835,11 +835,11 @@ start:
 					else if (odpowiedz == 'k' || odpowiedz == 'K')
 					{
 						zamiana = 5;
-						cout << " Ju¿ u¿y³eœ ko³a ratunkowego, spróbuj ponownie!" << endl;
+						cout << " JuÅ¼ uÅ¼yÅ‚eÅ› koÅ‚a ratunkowego, sprÃ³buj ponownie!" << endl;
 					}
 					else
 					{
-						cout << " Nie ma takiej odpowiedzi, spróbuj ponownie!" << endl;
+						cout << " Nie ma takiej odpowiedzi, sprÃ³buj ponownie!" << endl;
 						zamiana = 5;
 					}
 					kolaRatunkowe--;
@@ -848,7 +848,7 @@ start:
 			}
 			else
 			{
-				cout << "Nie masz ju¿ kó³ ratunkowych!" << endl;
+				cout << "Nie masz juÅ¼ kÃ³Å‚ ratunkowych!" << endl;
 				Sleep(1000);
 				system("cls");
 				goto pytanie;
@@ -867,7 +867,7 @@ start:
 			}
 			else
 			{
-				cout << "Nie masz ju¿ kó³ ratunkowych!";
+				cout << "Nie masz juÅ¼ kÃ³Å‚ ratunkowych!";
 				Sleep(2000);
 				system("cls");
 				goto pytanie;
@@ -878,15 +878,15 @@ start:
 
 		if (zamiana == prawidlowa)
 		{
-			cout << endl << "Dobra odpowiedŸ!" << endl << endl;
+			cout << endl << "Dobra odpowiedÅº!" << endl << endl;
 			zwyciestwa++;
 		}
 		else if (zamiana == 5)
-			cout << "Nie ma takiej odpowiedzi! Spróbuj ponownie" << endl;
+			cout << "Nie ma takiej odpowiedzi! SprÃ³buj ponownie" << endl;
 		else
 		{
-			cout << endl << "Z³a odpowiedŸ!" << endl << endl;
-			cout << "Poprawna odpowiedŸ: " << pr[losPytanie] << endl;
+			cout << endl << "ZÅ‚a odpowiedÅº!" << endl << endl;
+			cout << "Poprawna odpowiedÅº: " << pr[losPytanie] << endl;
 			porazki++;
 			Sleep(1000);
 		}
@@ -901,16 +901,16 @@ void pyt6()
 	int losPytanie;
 	losPytanie = pyt(generator);
 start:
-	string Pytanie[10]{ "Sk¹d pochodzi Connan Barbarzyñca?","Najwy¿sze polskie odznaczenie wojskowe, nadawane za wybitne zas³ugi bojowe, to:","Langusta to:","W którym województwie znajduje siê Ojcowski Park Narodowy?","Trafalgar Square to plac znajduj¹cy siê w:","Którego utworu symbolem jest czapka z pawim piórem?","Który polski prezydent zgin¹³ 5 dni po objêciu stanowiska?","Co znaczy ³aciñskie wyra¿enie 'Pecunia non olet'?","Które z poni¿szych miast znajduje siê na zachodnim wybrze¿u Stanów Zjednoczonych?","Wojna zimowa to nazwa konfliktu zbrojnego tocz¹cego siê od 30 listopada 1939 do 13 marca 1940 pomiêdzy ZSRR a:" };
+	string Pytanie[10]{ "SkÄ…d pochodzi Connan BarbarzyÅ„ca?","NajwyÅ¼sze polskie odznaczenie wojskowe, nadawane za wybitne zasÅ‚ugi bojowe, to:","Langusta to:","W ktÃ³rym wojewÃ³dztwie znajduje siÄ™ Ojcowski Park Narodowy?","Trafalgar Square to plac znajdujÄ…cy siÄ™ w:","KtÃ³rego utworu symbolem jest czapka z pawim piÃ³rem?","KtÃ³ry polski prezydent zginÄ…Å‚ 5 dni po objÄ™ciu stanowiska?","Co znaczy Å‚aciÅ„skie wyraÅ¼enie 'Pecunia non olet'?","KtÃ³re z poniÅ¼szych miast znajduje siÄ™ na zachodnim wybrzeÅ¼u StanÃ³w Zjednoczonych?","Wojna zimowa to nazwa konfliktu zbrojnego toczÄ…cego siÄ™ od 30 listopada 1939 do 13 marca 1940 pomiÄ™dzy ZSRR a:" };
 	int prawidlowa = odp(generator);
 	int licznik = 0, fifty_fifty;
 	int los, zamiana, bylo[4]{ 5,5,5,5 };
 	char abcd[4]{ 'a','b','c','d' };
-	string pr[10]{ "Z Cimmerii",  "Order Virtuti Militari",  "Skorupiak morski",  "Ma³opolskim",  "Londynie",  "Wesele",  "Gabriel Narutowicz",  "Pieni¹dze nie smierdz¹",  "San Francisco",  "Finlandia", };
-	string f1[10]{ "Z Rivii","Krzy¿ Poleg³ych","Ryba", "Œl¹skim", "Nowym Jorku", "Ogniem i Mieczem", "Ignacy Moœcicki", "Chwytaj dzieñ", "Miami", "Dania", };
-	string f2[10]{ "Z Cuzco","Order Odrodzenia Polski","Krzew", "Swiêtokrzyskim", "Doblinie", "Pan Wo³odyjowski", "Ignacy Jan Paderewski", "Polityka nie œmierdzi", "Nowy Jork", "Norwegia", };
-	string f3[10]{ "Z Niziny Wêgierskiej","Order Krzy¿a Wojskowego","Owad", "Podkarpackim", "Sydney", "Ferdydurke", "Maciej Rataj", "Pamiêtaj o œmierci", "Chicago", "Szwecj¹", };
-	string f4[10]{ "Z Rzymu","Order Orla Bialego","P³az", "Mazowieckim", "Manchesterze", "Pan Tadeusz", "Boles³aw Bierut", "Nic nowego", "Waszyngton", "Kazachstanem", };
+	string pr[10]{ "Z Cimmerii",  "Order Virtuti Militari",  "Skorupiak morski",  "MaÅ‚opolskim",  "Londynie",  "Wesele",  "Gabriel Narutowicz",  "PieniÄ…dze nie smierdzÄ…",  "San Francisco",  "Finlandia", };
+	string f1[10]{ "Z Rivii","KrzyÅ¼ PolegÅ‚ych","Ryba", "ÅšlÄ…skim", "Nowym Jorku", "Ogniem i Mieczem", "Ignacy MoÅ›cicki", "Chwytaj dzieÅ„", "Miami", "Dania", };
+	string f2[10]{ "Z Cuzco","Order Odrodzenia Polski","Krzew", "SwiÄ™tokrzyskim", "Doblinie", "Pan WoÅ‚odyjowski", "Ignacy Jan Paderewski", "Polityka nie Å›mierdzi", "Nowy Jork", "Norwegia", };
+	string f3[10]{ "Z Niziny WÄ™gierskiej","Order KrzyÅ¼a Wojskowego","Owad", "Podkarpackim", "Sydney", "Ferdydurke", "Maciej Rataj", "PamiÄ™taj o Å›mierci", "Chicago", "SzwecjÄ…", };
+	string f4[10]{ "Z Rzymu","Order Orla Bialego","PÅ‚az", "Mazowieckim", "Manchesterze", "Pan Tadeusz", "BolesÅ‚aw Bierut", "Nic nowego", "Waszyngton", "Kazachstanem", };
 	string tab[4]{};
 	while (licznik < 4)
 	{
@@ -944,8 +944,8 @@ start:
 	tab[prawidlowa] = pr[losPytanie];
 	do {
 		pytanie:
-		cout << "Zdobyta suma pieniêdzy: 10 000z³. Kwota gwarantowana: 1000z³" << endl << endl;
-		cout << endl << "Ko³a ratunkowe: " << kolaRatunkowe << endl << endl << "Pytanie 6: " << Pytanie[losPytanie] <<endl;
+		cout << "Zdobyta suma pieniÄ™dzy: 10 000zÅ‚. Kwota gwarantowana: 1000zÅ‚" << endl << endl;
+		cout << endl << "KoÅ‚a ratunkowe: " << kolaRatunkowe << endl << endl << "Pytanie 6: " << Pytanie[losPytanie] <<endl;
 		
 
 		for (int i = 0; i < 4; i++)
@@ -955,10 +955,10 @@ start:
 		}
 		if (kolaRatunkowe != 0)
 		{
-			cout << endl << "Wybierz 'k', aby u¿yæ ko³a ratunkowego 50/50. Nie bêdziesz móg³ potem u¿yæ ko³a 'Zmiana pytania'." << endl;
-			cout << "Wybierz 'l', aby u¿yæ ko³a ratunkowego 'Zmiana pytania'. Mo¿esz go u¿yæ wielokrotnie i u¿yæ ko³a 50/50" << endl;
+			cout << endl << "Wybierz 'k', aby uÅ¼yÄ‡ koÅ‚a ratunkowego 50/50. Nie bÄ™dziesz mÃ³gÅ‚ potem uÅ¼yÄ‡ koÅ‚a 'Zmiana pytania'." << endl;
+			cout << "Wybierz 'l', aby uÅ¼yÄ‡ koÅ‚a ratunkowego 'Zmiana pytania'. MoÅ¼esz go uÅ¼yÄ‡ wielokrotnie i uÅ¼yÄ‡ koÅ‚a 50/50" << endl;
 		}
-		cout << endl << "Podaj odpowiedŸ: ";
+		cout << endl << "Podaj odpowiedÅº: ";
 		char odpowiedz;
 		cin >> odpowiedz;
 
@@ -985,7 +985,7 @@ start:
 				{
 					Sleep(1000);
 					system("cls");
-					cout << "Zdobyta suma pieniêdzy: 10 000z³. Kwota gwarantowana: 1000z³" << endl << endl;
+					cout << "Zdobyta suma pieniÄ™dzy: 10 000zÅ‚. Kwota gwarantowana: 1000zÅ‚" << endl << endl;
 					cout << "Pytanie 6: " << Pytanie[losPytanie] <<endl;
 					if (fifty_fifty == 0)
 					{
@@ -999,7 +999,7 @@ start:
 						cout << "b) " << pr[losPytanie] << endl;
 						prawidlowa = 1;
 					}
-					cout << endl << "Podaj odpowiedŸ: ";
+					cout << endl << "Podaj odpowiedÅº: ";
 					cin >> odpowiedz;
 
 					if (odpowiedz == 'a' || odpowiedz == 'A')
@@ -1009,7 +1009,7 @@ start:
 					else if (odpowiedz == 'k' || odpowiedz == 'K')
 					{
 						zamiana = 5;
-						cout << " Ju¿ u¿y³eœ ko³a ratunkowego, spróbuj ponownie!" << endl;
+						cout << " JuÅ¼ uÅ¼yÅ‚eÅ› koÅ‚a ratunkowego, sprÃ³buj ponownie!" << endl;
 					}
 					else
 					{
@@ -1022,7 +1022,7 @@ start:
 			}
 			else
 			{
-				cout << "Nie masz ju¿ kó³ ratunkowych!" << endl;
+				cout << "Nie masz juÅ¼ kÃ³Å‚ ratunkowych!" << endl;
 				Sleep(1000);
 				system("cls");
 				goto pytanie;
@@ -1041,7 +1041,7 @@ start:
 			}
 			else
 			{
-				cout << "Nie masz ju¿ kó³ ratunkowych!";
+				cout << "Nie masz juÅ¼ kÃ³Å‚ ratunkowych!";
 				Sleep(2000);
 				system("cls");
 				goto pytanie;
@@ -1052,15 +1052,15 @@ start:
 
 		if (zamiana == prawidlowa)
 		{
-			cout << endl << "Dobra odpowiedŸ!" << endl << endl;
+			cout << endl << "Dobra odpowiedÅº!" << endl << endl;
 			zwyciestwa++;
 		}
 		else if (zamiana == 5)
-			cout << "Nie ma takiej odpowiedzi! Spróbuj ponownie" << endl;
+			cout << "Nie ma takiej odpowiedzi! SprÃ³buj ponownie" << endl;
 		else
 		{
-			cout << endl << "Z³a odpowiedŸ!" << endl << endl;
-			cout << "Poprawna odpowiedŸ: " << pr[losPytanie] << endl;
+			cout << endl << "ZÅ‚a odpowiedÅº!" << endl << endl;
+			cout << "Poprawna odpowiedÅº: " << pr[losPytanie] << endl;
 			porazki++;
 			Sleep(1000);
 		}
@@ -1074,16 +1074,16 @@ void pyt7()
 	int losPytanie;
 	losPytanie = pyt(generator);
 start:
-	string Pytanie[10]{ "Z ilu koœci sk³ada siê nadgarstek?","Nizina Mand¿urska, zajmuj¹ca obszar oko³o 350 tys. km, znajduje siê w:","Który z wymienionych malarzy by³ tworc¹ kubizmu?","Którego z wymienionych pierwiastków jest procentowo najwiêcej w bia³kach?","Prawid³owy tytu³ dramatu Tennessee Williamsa, to:","W którym pañstwie znajduje siê najd³u¿szy szklany most wisz¹cy?","Które z wymienionych pañstw le¿y na Pó³wyspie Iberyjskim?","Wed³ug Platona, 'Demokracja prowadzi do...':","Panczeny to","Dat¹ rozbicia dzielnicowego Polski jest rok:" };
+	string Pytanie[10]{ "Z ilu koÅ›ci skÅ‚ada siÄ™ nadgarstek?","Nizina MandÅ¼urska, zajmujÄ…ca obszar okoÅ‚o 350 tys. km, znajduje siÄ™ w:","KtÃ³ry z wymienionych malarzy byÅ‚ tworcÄ… kubizmu?","KtÃ³rego z wymienionych pierwiastkÃ³w jest procentowo najwiÄ™cej w biaÅ‚kach?","PrawidÅ‚owy tytuÅ‚ dramatu Tennessee Williamsa, to:","W ktÃ³rym paÅ„stwie znajduje siÄ™ najdÅ‚uÅ¼szy szklany most wiszÄ…cy?","KtÃ³re z wymienionych paÅ„stw leÅ¼y na PÃ³Å‚wyspie Iberyjskim?","WedÅ‚ug Platona, 'Demokracja prowadzi do...':","Panczeny to","DatÄ… rozbicia dzielnicowego Polski jest rok:" };
 	int prawidlowa = odp(generator);
 	int licznik = 0, fifty_fifty;
 	int los, zamiana, bylo[4]{ 5,5,5,5 };
 	char abcd[4]{ 'a','b','c','d' };
-	string pr[10]{ "8",  "Chinach",  "Pablo Picasso",  "Wêgla",  "Szklana Mena¿eria",  "W Chinach",  "Andora",  "Dyktatury",  "£y¿wy",  "1138", };
-	string f1[10]{ "4","Indiach","Paul Gauguin", "Cynku", "Szklana góra", "W Japonii", "Francja", "Dobrobytu", "Bojlery", "1320", };
-	string f2[10]{ "10","Mongolii","Leonardo Da Vinci", "Fosforu", "Szklana szkatu³ka", "W Korei Po³udniowej", "W³ochy", "Wojny", "Narty", "1025", };
+	string pr[10]{ "8",  "Chinach",  "Pablo Picasso",  "WÄ™gla",  "Szklana MenaÅ¼eria",  "W Chinach",  "Andora",  "Dyktatury",  "ÅyÅ¼wy",  "1138", };
+	string f1[10]{ "4","Indiach","Paul Gauguin", "Cynku", "Szklana gÃ³ra", "W Japonii", "Francja", "Dobrobytu", "Bojlery", "1320", };
+	string f2[10]{ "10","Mongolii","Leonardo Da Vinci", "Fosforu", "Szklana szkatuÅ‚ka", "W Korei PoÅ‚udniowej", "WÅ‚ochy", "Wojny", "Narty", "1025", };
 	string f3[10]{ "5","Rosji","Claude Monet", "Siarki", "Szklana kula", "W Tajlandii", "Niemcy", "Demoralizacji", "Sanki", "1226", };
-	string f4[10]{ "7","Kazachstanie","Salvador Dali", "O³owiu", "Szklana bransoleta", "W Korei Pó³ónocnej", "Mauretania", "Tragedii", "Rakiety do œniegu", "1410", };
+	string f4[10]{ "7","Kazachstanie","Salvador Dali", "OÅ‚owiu", "Szklana bransoleta", "W Korei PÃ³Å‚Ã³nocnej", "Mauretania", "Tragedii", "Rakiety do Å›niegu", "1410", };
 	string tab[4]{};
 	while (licznik < 4)
 	{
@@ -1117,8 +1117,8 @@ start:
 	tab[prawidlowa] = pr[losPytanie];
 	do {
 		pytanie:
-		cout << "Zdobyta suma pieniêdzy: 20 000z³. Kwota gwarantowana: 1000z³" << endl << endl;
-		cout << endl << "Ko³a ratunkowe: " << kolaRatunkowe << endl << endl << "Pytanie 7: " << Pytanie[losPytanie] <<endl;
+		cout << "Zdobyta suma pieniÄ™dzy: 20 000zÅ‚. Kwota gwarantowana: 1000zÅ‚" << endl << endl;
+		cout << endl << "KoÅ‚a ratunkowe: " << kolaRatunkowe << endl << endl << "Pytanie 7: " << Pytanie[losPytanie] <<endl;
 		
 
 		for (int i = 0; i < 4; i++)
@@ -1128,10 +1128,10 @@ start:
 		}
 		if (kolaRatunkowe != 0)
 		{
-			cout << endl << "Wybierz 'k', aby u¿yæ ko³a ratunkowego 50/50. Nie bêdziesz móg³ potem u¿yæ ko³a 'Zmiana pytania'." << endl;
-			cout << "Wybierz 'l', aby u¿yæ ko³a ratunkowego 'Zmiana pytania'. Mo¿esz go u¿yæ wielokrotnie i u¿yæ ko³a 50/50" << endl;
+			cout << endl << "Wybierz 'k', aby uÅ¼yÄ‡ koÅ‚a ratunkowego 50/50. Nie bÄ™dziesz mÃ³gÅ‚ potem uÅ¼yÄ‡ koÅ‚a 'Zmiana pytania'." << endl;
+			cout << "Wybierz 'l', aby uÅ¼yÄ‡ koÅ‚a ratunkowego 'Zmiana pytania'. MoÅ¼esz go uÅ¼yÄ‡ wielokrotnie i uÅ¼yÄ‡ koÅ‚a 50/50" << endl;
 		}
-		cout << endl << "Podaj odpowiedŸ: ";
+		cout << endl << "Podaj odpowiedÅº: ";
 		char odpowiedz;
 		cin >> odpowiedz;
 
@@ -1158,7 +1158,7 @@ start:
 				{
 					Sleep(1000);
 					system("cls");
-					cout << "Zdobyta suma pieniêdzy: 20 000z³. Kwota gwarantowana: 1000z³" << endl << endl;
+					cout << "Zdobyta suma pieniÄ™dzy: 20 000zÅ‚. Kwota gwarantowana: 1000zÅ‚" << endl << endl;
 					cout << "Pytanie 7: " << Pytanie[losPytanie] <<endl;
 					if (fifty_fifty == 0)
 					{
@@ -1172,7 +1172,7 @@ start:
 						cout << "b) " << pr[losPytanie] << endl;
 						prawidlowa = 1;
 					}
-					cout << endl << "Podaj odpowiedŸ: ";
+					cout << endl << "Podaj odpowiedÅº: ";
 					cin >> odpowiedz;
 
 					if (odpowiedz == 'a' || odpowiedz == 'A')
@@ -1182,11 +1182,11 @@ start:
 					else if (odpowiedz == 'k' || odpowiedz == 'K')
 					{
 						zamiana = 5;
-						cout << " Ju¿ u¿y³eœ ko³a ratunkowego, spróbuj ponownie!" << endl;
+						cout << " JuÅ¼ uÅ¼yÅ‚eÅ› koÅ‚a ratunkowego, sprÃ³buj ponownie!" << endl;
 					}
 					else
 					{
-						cout << " Nie ma takiej odpowiedzi, spróbuj ponownie!" << endl;
+						cout << " Nie ma takiej odpowiedzi, sprÃ³buj ponownie!" << endl;
 						zamiana = 5;
 					}
 					kolaRatunkowe--;
@@ -1195,7 +1195,7 @@ start:
 			}
 			else
 			{
-				cout << "Nie masz ju¿ kó³ ratunkowych!" << endl;
+				cout << "Nie masz juÅ¼ kÃ³Å‚ ratunkowych!" << endl;
 				Sleep(1000);
 				system("cls");
 				goto pytanie;
@@ -1214,7 +1214,7 @@ start:
 			}
 			else
 			{
-				cout << "Nie masz ju¿ kó³ ratunkowych!";
+				cout << "Nie masz juÅ¼ kÃ³Å‚ ratunkowych!";
 				Sleep(2000);
 				system("cls");
 				goto pytanie;
@@ -1225,15 +1225,15 @@ start:
 
 		if (zamiana == prawidlowa)
 		{
-			cout << endl << "Dobra odpowiedŸ!" << endl << endl;
+			cout << endl << "Dobra odpowiedÅº!" << endl << endl;
 			zwyciestwa++;
 		}
 		else if (zamiana == 5)
-			cout << "Nie ma takiej odpowiedzi! Spróbuj ponownie" << endl;
+			cout << "Nie ma takiej odpowiedzi! SprÃ³buj ponownie" << endl;
 		else
 		{
-			cout << endl << "Z³a odpowiedŸ!" << endl << endl;
-			cout << "Poprawna odpowiedŸ: " << pr[losPytanie] << endl;
+			cout << endl << "ZÅ‚a odpowiedÅº!" << endl << endl;
+			cout << "Poprawna odpowiedÅº: " << pr[losPytanie] << endl;
 			porazki++;
 			Sleep(1000);
 		}
@@ -1247,16 +1247,16 @@ void pyt8()
 	int losPytanie;
 	losPytanie = pyt(generator);
 start:
-	string Pytanie[10]{ "Do Unii Europejskiej nie nale¿y:","Na którym instrumencie gra³ Louis Armstrong?","Bona Sforza by³a ¿on¹:","Który z wymienionych stanów USA NIE graniczy z Meksykiem?","Patagonia to kraina geograficzna w:","Œmieræ którego z wymienionych w³adców by³a koñcem dynastii Jagiellonów?","Najostrzejsz¹ z tych papryk jest: ","'Capo di tutti capi' z w³oskiego oznacza:","Mówi¹c o Kitaju, Rosjanin ma na myœli:","Homonimem s³owa ranny (o poranku) jest s³owo:" };
+	string Pytanie[10]{ "Do Unii Europejskiej nie naleÅ¼y:","Na ktÃ³rym instrumencie graÅ‚ Louis Armstrong?","Bona Sforza byÅ‚a Å¼onÄ…:","KtÃ³ry z wymienionych stanÃ³w USA NIE graniczy z Meksykiem?","Patagonia to kraina geograficzna w:","ÅšmierÄ‡ ktÃ³rego z wymienionych wÅ‚adcÃ³w byÅ‚a koÅ„cem dynastii JagiellonÃ³w?","NajostrzejszÄ… z tych papryk jest: ","'Capo di tutti capi' z wÅ‚oskiego oznacza:","MÃ³wiÄ…c o Kitaju, Rosjanin ma na myÅ›li:","Homonimem sÅ‚owa ranny (o poranku) jest sÅ‚owo:" };
 	int prawidlowa = odp(generator);
 	int licznik = 0, fifty_fifty;
 	int los, zamiana, bylo[4]{ 5,5,5,5 };
 	char abcd[4]{ 'a','b','c','d' };
-	string pr[10]{ "Szwajcaria",  "Tr¹bka",  "Zygmunta I Starego",  "Waszyngton",  "Ameryce Po³udniowej",  "Zygmunta Augusta",  "Habanero",  "Szef wszystkich szefów",  "Chiñczyka",  "Ranny(zraniony)", };
-	string f1[10]{ "Hiszpania","Saksofon","Zygmunta II Augusta", "Kalifornia", "Australii", "Zygmunta Starego", "Thai Chili", "Sprawy nasze s¹ nasze", "Japoñczyka", "Wieczorny", };
-	string f2[10]{ "S³owacja","Skrzypce","Jana I Olbrachta", "Arizona", "Europie", "Aleksandra Jagielloñczyka", "Serrano", "Raz kapuœ, zawsze kapuœ", "Nowozelandczyka", "Poranny", };
-	string f3[10]{ "Chorwacja","Puzon","Kazimierza IV Jagielloñczyka", "Teksas", "Azji", "Kazimierza Jagielloñczyka", "Jalapeno", "Historia œwiadkiem dziejów", "Tajlandczyka", "Rynna", };
-	string f4[10]{ "Portugalia","Kornet","Zygmunta III Wazy", "Nowy Meksyk", "Ameryce Pó³nocnej", "W³adyslaw II Jagie³³o", "Poblano", "Prawda zostanie prawd¹", "Koreañczyka", "Œwitowy", };
+	string pr[10]{ "Szwajcaria",  "TrÄ…bka",  "Zygmunta I Starego",  "Waszyngton",  "Ameryce PoÅ‚udniowej",  "Zygmunta Augusta",  "Habanero",  "Szef wszystkich szefÃ³w",  "ChiÅ„czyka",  "Ranny(zraniony)", };
+	string f1[10]{ "Hiszpania","Saksofon","Zygmunta II Augusta", "Kalifornia", "Australii", "Zygmunta Starego", "Thai Chili", "Sprawy nasze sÄ… nasze", "JapoÅ„czyka", "Wieczorny", };
+	string f2[10]{ "SÅ‚owacja","Skrzypce","Jana I Olbrachta", "Arizona", "Europie", "Aleksandra JagielloÅ„czyka", "Serrano", "Raz kapuÅ›, zawsze kapuÅ›", "Nowozelandczyka", "Poranny", };
+	string f3[10]{ "Chorwacja","Puzon","Kazimierza IV JagielloÅ„czyka", "Teksas", "Azji", "Kazimierza JagielloÅ„czyka", "Jalapeno", "Historia Å›wiadkiem dziejÃ³w", "Tajlandczyka", "Rynna", };
+	string f4[10]{ "Portugalia","Kornet","Zygmunta III Wazy", "Nowy Meksyk", "Ameryce PÃ³Å‚nocnej", "WÅ‚adyslaw II JagieÅ‚Å‚o", "Poblano", "Prawda zostanie prawdÄ…", "KoreaÅ„czyka", "Åšwitowy", };
 	string tab[4]{};
 	while (licznik < 4)
 	{
@@ -1290,8 +1290,8 @@ start:
 	tab[prawidlowa] = pr[losPytanie];
 	do {
 		pytanie:
-		cout << "Zdobyta suma pieniêdzy: 40 000z³. Kwota gwarantowana: 40 000z³" << endl << endl;
-		cout << endl << "Ko³a ratunkowe: " << kolaRatunkowe << endl << endl << "Pytanie 8: " << Pytanie[losPytanie] <<endl;
+		cout << "Zdobyta suma pieniÄ™dzy: 40 000zÅ‚. Kwota gwarantowana: 40 000zÅ‚" << endl << endl;
+		cout << endl << "KoÅ‚a ratunkowe: " << kolaRatunkowe << endl << endl << "Pytanie 8: " << Pytanie[losPytanie] <<endl;
 		
 
 		for (int i = 0; i < 4; i++)
@@ -1301,10 +1301,10 @@ start:
 		}
 		if (kolaRatunkowe != 0)
 		{
-			cout << endl << "Wybierz 'k', aby u¿yæ ko³a ratunkowego 50/50. Nie bêdziesz móg³ potem u¿yæ ko³a 'Zmiana pytania'." << endl;
-			cout << "Wybierz 'l', aby u¿yæ ko³a ratunkowego 'Zmiana pytania'. Mo¿esz go u¿yæ wielokrotnie i u¿yæ ko³a 50/50" << endl;
+			cout << endl << "Wybierz 'k', aby uÅ¼yÄ‡ koÅ‚a ratunkowego 50/50. Nie bÄ™dziesz mÃ³gÅ‚ potem uÅ¼yÄ‡ koÅ‚a 'Zmiana pytania'." << endl;
+			cout << "Wybierz 'l', aby uÅ¼yÄ‡ koÅ‚a ratunkowego 'Zmiana pytania'. MoÅ¼esz go uÅ¼yÄ‡ wielokrotnie i uÅ¼yÄ‡ koÅ‚a 50/50" << endl;
 		}
-		cout << endl << "Podaj odpowiedŸ: ";
+		cout << endl << "Podaj odpowiedÅº: ";
 		char odpowiedz;
 		cin >> odpowiedz;
 
@@ -1331,7 +1331,7 @@ start:
 				{
 					Sleep(1000);
 					system("cls");
-					cout << "Zdobyta suma pieniêdzy: 40 000z³. Kwota gwarantowana: 40 000z³" << endl << endl;
+					cout << "Zdobyta suma pieniÄ™dzy: 40 000zÅ‚. Kwota gwarantowana: 40 000zÅ‚" << endl << endl;
 					cout << "Pytanie 8: " << Pytanie[losPytanie]<< endl;
 					if (fifty_fifty == 0)
 					{
@@ -1345,7 +1345,7 @@ start:
 						cout << "b) " << pr[losPytanie] << endl;
 						prawidlowa = 1;
 					}
-					cout << endl << "Podaj odpowiedŸ: ";
+					cout << endl << "Podaj odpowiedÅº: ";
 					cin >> odpowiedz;
 
 					if (odpowiedz == 'a' || odpowiedz == 'A')
@@ -1355,11 +1355,11 @@ start:
 					else if (odpowiedz == 'k' || odpowiedz == 'K')
 					{
 						zamiana = 5;
-						cout << " Ju¿ u¿y³eœ ko³a ratunkowego, spróbuj ponownie!" << endl;
+						cout << " JuÅ¼ uÅ¼yÅ‚eÅ› koÅ‚a ratunkowego, sprÃ³buj ponownie!" << endl;
 					}
 					else
 					{
-						cout << " Nie ma takiej odpowiedzi, spróbuj ponownie!" << endl;
+						cout << " Nie ma takiej odpowiedzi, sprÃ³buj ponownie!" << endl;
 						zamiana = 5;
 					}
 					kolaRatunkowe--;
@@ -1368,7 +1368,7 @@ start:
 			}
 			else
 			{
-				cout << "Nie masz ju¿ kó³ ratunkowych!" << endl;
+				cout << "Nie masz juÅ¼ kÃ³Å‚ ratunkowych!" << endl;
 				Sleep(1000);
 				system("cls");
 				goto pytanie;
@@ -1387,7 +1387,7 @@ start:
 			}
 			else
 			{
-				cout << "Nie masz ju¿ kó³ ratunkowych!";
+				cout << "Nie masz juÅ¼ kÃ³Å‚ ratunkowych!";
 				Sleep(2000);
 				system("cls");
 				goto pytanie;
@@ -1398,15 +1398,15 @@ start:
 
 		if (zamiana == prawidlowa)
 		{
-			cout << endl << "Dobra odpowiedŸ!" << endl << endl;
+			cout << endl << "Dobra odpowiedÅº!" << endl << endl;
 			zwyciestwa++;
 		}
 		else if (zamiana == 5)
-			cout << "Nie ma takiej odpowiedzi! Spróbuj ponownie" << endl;
+			cout << "Nie ma takiej odpowiedzi! SprÃ³buj ponownie" << endl;
 		else
 		{
-			cout << endl << "Z³a odpowiedŸ!" << endl << endl;
-			cout << "Poprawna odpowiedŸ: " << pr[losPytanie] << endl;
+			cout << endl << "ZÅ‚a odpowiedÅº!" << endl << endl;
+			cout << "Poprawna odpowiedÅº: " << pr[losPytanie] << endl;
 			porazki++;
 			Sleep(1000);
 		}
@@ -1420,16 +1420,16 @@ void pyt9()
 	int losPytanie;
 	losPytanie = pyt(generator);
 start:
-	string Pytanie[10]{ "Ragdoll to rasa/gatunek:","Które Chorwackie miasto nie le¿y nad Morzem Adriatyckim?","Komuna Paryska to zryw rewolucyjny ludnoœci Pary¿a, przede wszystkim inteligencji i robotników w:","Od stê¿enia jakiego sk³adnika zale¿y kolor sk³ry cz³owieka?","Ile metrów ma mila?","W którym roku wybuch³ 'wielki po¿ar Londynu'?","W którym wieku powsta³y najwiêksze dzie³a Monteskiusza?","Które zdarzenie mia³o miejsce najwczeœniej?","Kiedy przypada swiêto narodowe w Argentynie?","Trasa W-Z w Warszawie zosta³a zbudowana w latach:" };
+	string Pytanie[10]{ "Ragdoll to rasa/gatunek:","KtÃ³re Chorwackie miasto nie leÅ¼y nad Morzem Adriatyckim?","Komuna Paryska to zryw rewolucyjny ludnoÅ›ci ParyÅ¼a, przede wszystkim inteligencji i robotnikÃ³w w:","Od stÄ™Å¼enia jakiego skÅ‚adnika zaleÅ¼y kolor skÅ‚ry czÅ‚owieka?","Ile metrÃ³w ma mila?","W ktÃ³rym roku wybuchÅ‚ 'wielki poÅ¼ar Londynu'?","W ktÃ³rym wieku powstaÅ‚y najwiÄ™ksze dzieÅ‚a Monteskiusza?","KtÃ³re zdarzenie miaÅ‚o miejsce najwczeÅ›niej?","Kiedy przypada swiÄ™to narodowe w Argentynie?","Trasa W-Z w Warszawie zostaÅ‚a zbudowana w latach:" };
 	int prawidlowa = odp(generator);
 	int licznik = 0, fifty_fifty;
 	int los, zamiana, bylo[4]{ 5,5,5,5 };
 	char abcd[4]{ 'a','b','c','d' };
-	string pr[10]{ "Kota",  "Zagrzeb",  "XIX w.",  "Melaniny",  "1609",  "1666",  "XVIII w.",  "Œmieræ Marilyn Monroe",  "25 maja",  "1947-1949", };
+	string pr[10]{ "Kota",  "Zagrzeb",  "XIX w.",  "Melaniny",  "1609",  "1666",  "XVIII w.",  "ÅšmierÄ‡ Marilyn Monroe",  "25 maja",  "1947-1949", };
 	string f1[10]{ "Psa","Dubrownik","XX w.", "Melatoniny", "1605", "1565", "XVII w.", "Zamach na prezydenta Kennedy'ego", "30 maja", "1945-1947", };
-	string f2[10]{ "Królika","Zadar","XVII w.", "Keratyny", "1600", "1536", "I w. p. n. e.", "L¹dowanie na Ksiê¿ycu", "14 maja", "1950-1952", };
+	string f2[10]{ "KrÃ³lika","Zadar","XVII w.", "Keratyny", "1600", "1536", "I w. p. n. e.", "LÄ…dowanie na KsiÄ™Å¼ycu", "14 maja", "1950-1952", };
 	string f3[10]{ "Papugi","Split","XVIII w.", "Prolaktyny", "1608", "1685", "II w. p. n. e.", "Pierwszy koncert The Beatles w Stanach Zjednoczonych", "28 kwietnia", "1955-1957", };
-	string f4[10]{ "Chomika","Pula","XXVI w.", "Melanostatyna", "1606", "1657", "III w. p. n. e.", "Œmieræ Winstona Churchilla", "23 kwietnia", "1957-1959", };
+	string f4[10]{ "Chomika","Pula","XXVI w.", "Melanostatyna", "1606", "1657", "III w. p. n. e.", "ÅšmierÄ‡ Winstona Churchilla", "23 kwietnia", "1957-1959", };
 	string tab[4]{};
 	while (licznik < 4)
 	{
@@ -1463,8 +1463,8 @@ start:
 	tab[prawidlowa] = pr[losPytanie];
 	do {
 		pytanie:
-		cout << "Zdobyta suma pieniêdzy: 75 000z³. Kwota gwarantowana: 40 000z³" << endl << endl;
-		cout << endl << "Ko³a ratunkowe: " << kolaRatunkowe << endl << endl << "Pytanie 9: "<< Pytanie[losPytanie] << endl;
+		cout << "Zdobyta suma pieniÄ™dzy: 75 000zÅ‚. Kwota gwarantowana: 40 000zÅ‚" << endl << endl;
+		cout << endl << "KoÅ‚a ratunkowe: " << kolaRatunkowe << endl << endl << "Pytanie 9: "<< Pytanie[losPytanie] << endl;
 		
 
 		for (int i = 0; i < 4; i++)
@@ -1474,10 +1474,10 @@ start:
 		}
 		if (kolaRatunkowe != 0)
 		{
-			cout << endl << "Wybierz 'k', aby u¿yæ ko³a ratunkowego 50/50. Nie bêdziesz móg³ potem u¿yæ ko³a 'Zmiana pytania'." << endl;
-			cout << "Wybierz 'l', aby u¿yæ ko³a ratunkowego 'Zmiana pytania'. Mo¿esz go u¿yæ wielokrotnie i u¿yæ ko³a 50/50" << endl;
+			cout << endl << "Wybierz 'k', aby uÅ¼yÄ‡ koÅ‚a ratunkowego 50/50. Nie bÄ™dziesz mÃ³gÅ‚ potem uÅ¼yÄ‡ koÅ‚a 'Zmiana pytania'." << endl;
+			cout << "Wybierz 'l', aby uÅ¼yÄ‡ koÅ‚a ratunkowego 'Zmiana pytania'. MoÅ¼esz go uÅ¼yÄ‡ wielokrotnie i uÅ¼yÄ‡ koÅ‚a 50/50" << endl;
 		}
-		cout << endl << "Podaj odpowiedŸ: ";
+		cout << endl << "Podaj odpowiedÅº: ";
 		char odpowiedz;
 		cin >> odpowiedz;
 
@@ -1504,7 +1504,7 @@ start:
 				{
 					Sleep(1000);
 					system("cls");
-					cout << "Zdobyta suma pieniêdzy: 75 000z³. Kwota gwarantowana: 40 000z³" << endl << endl;
+					cout << "Zdobyta suma pieniÄ™dzy: 75 000zÅ‚. Kwota gwarantowana: 40 000zÅ‚" << endl << endl;
 					cout << "Pytanie 9: " << Pytanie[losPytanie] <<endl;
 					if (fifty_fifty == 0)
 					{
@@ -1518,7 +1518,7 @@ start:
 						cout << "b) " << pr[losPytanie] << endl;
 						prawidlowa = 1;
 					}
-					cout << endl << "Podaj odpowiedŸ: ";
+					cout << endl << "Podaj odpowiedÅº: ";
 					cin >> odpowiedz;
 
 					if (odpowiedz == 'a' || odpowiedz == 'A')
@@ -1528,11 +1528,11 @@ start:
 					else if (odpowiedz == 'k' || odpowiedz == 'K')
 					{
 						zamiana = 5;
-						cout << " Ju¿ u¿y³eœ ko³a ratunkowego, spróbuj ponownie!" << endl;
+						cout << " JuÅ¼ uÅ¼yÅ‚eÅ› koÅ‚a ratunkowego, sprÃ³buj ponownie!" << endl;
 					}
 					else
 					{
-						cout << " Nie ma takiej odpowiedzi, spróbuj ponownie!" << endl;
+						cout << " Nie ma takiej odpowiedzi, sprÃ³buj ponownie!" << endl;
 						zamiana = 5;
 					}
 					kolaRatunkowe--;
@@ -1541,7 +1541,7 @@ start:
 			}
 			else
 			{
-				cout << "Nie masz ju¿ kó³ ratunkowych!" << endl;
+				cout << "Nie masz juÅ¼ kÃ³Å‚ ratunkowych!" << endl;
 				Sleep(1000);
 				system("cls");
 				goto pytanie;
@@ -1560,7 +1560,7 @@ start:
 			}
 			else
 			{
-				cout << "Nie masz ju¿ kó³ ratunkowych!";
+				cout << "Nie masz juÅ¼ kÃ³Å‚ ratunkowych!";
 				Sleep(2000);
 				system("cls");
 				goto pytanie;
@@ -1571,15 +1571,15 @@ start:
 
 		if (zamiana == prawidlowa)
 		{
-			cout << endl << "Dobra odpowiedŸ!" << endl << endl;
+			cout << endl << "Dobra odpowiedÅº!" << endl << endl;
 			zwyciestwa++;
 		}
 		else if (zamiana == 5)
-			cout << "Nie ma takiej odpowiedzi! Spróbuj ponownie" << endl;
+			cout << "Nie ma takiej odpowiedzi! SprÃ³buj ponownie" << endl;
 		else
 		{
-			cout << endl << "Z³a odpowiedŸ!" << endl << endl;
-			cout << "Poprawna odpowiedŸ: " << pr[losPytanie] << endl;
+			cout << endl << "ZÅ‚a odpowiedÅº!" << endl << endl;
+			cout << "Poprawna odpowiedÅº: " << pr[losPytanie] << endl;
 			porazki++;
 			Sleep(1000);
 		}
@@ -1593,16 +1593,16 @@ void pyt10()
 	int losPytanie;
 	losPytanie = pyt(generator);
 start:
-	string Pytanie[10]{ "Monachomachia to poemat heroikomiczny o wojnie mnichów autorstwa:","Jaki stan amerykañski jako pierwszy zadeklarowa³ secesjê z Unii w 1860 roku?","Który z tych szczytów nie znajduje siê w Tatrach?","Co oznacza skrót RPP?","Która z tych wysp nie nale¿y do Wysp Kanaryjskich?","Jedna z g³ównych ulic warszawskiego Œrodmieœcia, przechodz¹ca bezpoœrednio w Krakowskie Przedmieœcie, to:","Poprawnym zapisem jest:","'Upiêr w operze' to dzie³o: ","Auguste Rodin to francuski:","Które Afrykaœskie pañstwo jest najludniejsze?" };
+	string Pytanie[10]{ "Monachomachia to poemat heroikomiczny o wojnie mnichÃ³w autorstwa:","Jaki stan amerykaÅ„ski jako pierwszy zadeklarowaÅ‚ secesjÄ™ z Unii w 1860 roku?","KtÃ³ry z tych szczytÃ³w nie znajduje siÄ™ w Tatrach?","Co oznacza skrÃ³t RPP?","KtÃ³ra z tych wysp nie naleÅ¼y do Wysp Kanaryjskich?","Jedna z gÅ‚Ã³wnych ulic warszawskiego ÅšrodmieÅ›cia, przechodzÄ…ca bezpoÅ›rednio w Krakowskie PrzedmieÅ›cie, to:","Poprawnym zapisem jest:","'UpiÄ™r w operze' to dzieÅ‚o: ","Auguste Rodin to francuski:","KtÃ³re AfrykaÅ›skie paÅ„stwo jest najludniejsze?" };
 	int prawidlowa = odp(generator);
 	int licznik = 0, fifty_fifty;
 	int los, zamiana, bylo[4]{ 5,5,5,5 };
 	char abcd[4]{ 'a','b','c','d' };
-	string pr[10]{ "Ignacego Krasickiego",  "Karolina Po³udniowa",  "Œnie¿nik",  "Rada Polityki Pieniê¿nej",  "Lesbos",  "Nowy Œwiat",  "Znienacka",  "Andrew Lloyda Webbera",  "RzeŸbiarz",  "Nigeria", };
-	string f1[10]{ "Aleksandra Fredry","Nowy Jork","Gerlach", "Rada Polityki Polskiej", "Lanzarote", "Marsza³kowska", "Z nienacka", "Wolfganga Amadeusza Mozarta", "Malarz", "Kenia", };
-	string f2[10]{ "Jana Kochanowskiego","Waszyngton","Krywan", "Rada Polityki Pañstwowej", "Lobos", "Aleje Jerozolimskie", "Znienadzka", "Stanis³awa Moniuszki", "Pisarz", "RPA", };
-	string f3[10]{ "Juliana Ursyna Niemcewicza","Dakota Pó³nocna","Koœcielec", "Rada Polskiej Przedsiêbiorczoœci", "Teneryfa", "Grojecka", "Z nienadzka", "Fryderyka Chopina", "Kompozytor", "Mozambik", };
-	string f4[10]{ "Adama Mickiewicza","Georgia","£omnica", "Rada Pañstwa Polskiego", "La Palma", "Œródmiejska", "Z nie nacka", "Ignacego Paderewskiego", "Aktor", "Namibia", };
+	string pr[10]{ "Ignacego Krasickiego",  "Karolina PoÅ‚udniowa",  "ÅšnieÅ¼nik",  "Rada Polityki PieniÄ™Å¼nej",  "Lesbos",  "Nowy Åšwiat",  "Znienacka",  "Andrew Lloyda Webbera",  "RzeÅºbiarz",  "Nigeria", };
+	string f1[10]{ "Aleksandra Fredry","Nowy Jork","Gerlach", "Rada Polityki Polskiej", "Lanzarote", "MarszaÅ‚kowska", "Z nienacka", "Wolfganga Amadeusza Mozarta", "Malarz", "Kenia", };
+	string f2[10]{ "Jana Kochanowskiego","Waszyngton","Krywan", "Rada Polityki PaÅ„stwowej", "Lobos", "Aleje Jerozolimskie", "Znienadzka", "StanisÅ‚awa Moniuszki", "Pisarz", "RPA", };
+	string f3[10]{ "Juliana Ursyna Niemcewicza","Dakota PÃ³Å‚nocna","KoÅ›cielec", "Rada Polskiej PrzedsiÄ™biorczoÅ›ci", "Teneryfa", "Grojecka", "Z nienadzka", "Fryderyka Chopina", "Kompozytor", "Mozambik", };
+	string f4[10]{ "Adama Mickiewicza","Georgia","Åomnica", "Rada PaÅ„stwa Polskiego", "La Palma", "ÅšrÃ³dmiejska", "Z nie nacka", "Ignacego Paderewskiego", "Aktor", "Namibia", };
 	string tab[4]{};
 	while (licznik < 4)
 	{
@@ -1636,8 +1636,8 @@ start:
 	tab[prawidlowa] = pr[losPytanie];
 	do {
 		pytanie:
-		cout << "Zdobyta suma pieniêdzy: 125 000z³. Kwota gwarantowana: 40 000z³" << endl << endl;
-		cout << endl << "Ko³a ratunkowe: " << kolaRatunkowe << endl << endl << "Pytanie 10: " << Pytanie[losPytanie] <<endl;
+		cout << "Zdobyta suma pieniÄ™dzy: 125 000zÅ‚. Kwota gwarantowana: 40 000zÅ‚" << endl << endl;
+		cout << endl << "KoÅ‚a ratunkowe: " << kolaRatunkowe << endl << endl << "Pytanie 10: " << Pytanie[losPytanie] <<endl;
 		
 		for (int i = 0; i < 4; i++)
 		{
@@ -1646,10 +1646,10 @@ start:
 		}
 		if (kolaRatunkowe != 0)
 		{
-			cout << endl << "Wybierz 'k', aby u¿yæ ko³a ratunkowego 50/50. Nie bêdziesz móg³ potem u¿yæ ko³a 'Zmiana pytania'." << endl;
-			cout << "Wybierz 'l', aby u¿yæ ko³a ratunkowego 'Zmiana pytania'. Mo¿esz go u¿yæ wielokrotnie i u¿yæ ko³a 50/50" << endl;
+			cout << endl << "Wybierz 'k', aby uÅ¼yÄ‡ koÅ‚a ratunkowego 50/50. Nie bÄ™dziesz mÃ³gÅ‚ potem uÅ¼yÄ‡ koÅ‚a 'Zmiana pytania'." << endl;
+			cout << "Wybierz 'l', aby uÅ¼yÄ‡ koÅ‚a ratunkowego 'Zmiana pytania'. MoÅ¼esz go uÅ¼yÄ‡ wielokrotnie i uÅ¼yÄ‡ koÅ‚a 50/50" << endl;
 		}
-		cout << endl << "Podaj odpowiedŸ: ";
+		cout << endl << "Podaj odpowiedÅº: ";
 		char odpowiedz;
 		cin >> odpowiedz;
 
@@ -1676,7 +1676,7 @@ start:
 				{
 					Sleep(1000);
 					system("cls");
-					cout << "Zdobyta suma pieniêdzy: 125 000z³. Kwota gwarantowana: 40 000z³" << endl << endl;
+					cout << "Zdobyta suma pieniÄ™dzy: 125 000zÅ‚. Kwota gwarantowana: 40 000zÅ‚" << endl << endl;
 					cout << "Pytanie 10: " << Pytanie[losPytanie] << endl;
 					if (fifty_fifty == 0)
 					{
@@ -1690,7 +1690,7 @@ start:
 						cout << "b) " << pr[losPytanie] << endl;
 						prawidlowa = 1;
 					}
-					cout << endl << "Podaj odpowiedŸ: ";
+					cout << endl << "Podaj odpowiedÅº: ";
 					cin >> odpowiedz;
 
 					if (odpowiedz == 'a' || odpowiedz == 'A')
@@ -1700,11 +1700,11 @@ start:
 					else if (odpowiedz == 'k' || odpowiedz == 'K')
 					{
 						zamiana = 5;
-						cout << " Ju¿ u¿y³es ko³a ratunkowego, spróbuj ponownie!" << endl;
+						cout << " JuÅ¼ uÅ¼yÅ‚es koÅ‚a ratunkowego, sprÃ³buj ponownie!" << endl;
 					}
 					else
 					{
-						cout << " Nie ma takiej odpowiedzi, spróbuj ponownie!" << endl;
+						cout << " Nie ma takiej odpowiedzi, sprÃ³buj ponownie!" << endl;
 						zamiana = 5;
 					}
 					kolaRatunkowe--;
@@ -1713,7 +1713,7 @@ start:
 			}
 			else
 			{
-				cout << "Nie masz ju¿ kó³ ratunkowych!" << endl;
+				cout << "Nie masz juÅ¼ kÃ³Å‚ ratunkowych!" << endl;
 				Sleep(1000);
 				system("cls");
 				goto pytanie;
@@ -1732,7 +1732,7 @@ start:
 			}
 			else
 			{
-				cout << "Nie masz ju¿ kó³ ratunkowych!";
+				cout << "Nie masz juÅ¼ kÃ³Å‚ ratunkowych!";
 				Sleep(2000);
 				system("cls");
 				goto pytanie;
@@ -1743,15 +1743,15 @@ start:
 
 		if (zamiana == prawidlowa)
 		{
-			cout << endl << "Dobra odpowiedŸ!" << endl << endl;
+			cout << endl << "Dobra odpowiedÅº!" << endl << endl;
 			zwyciestwa++;
 		}
 		else if (zamiana == 5)
-			cout << "Nie ma takiej odpowiedzi! Spróbuj ponownie" << endl;
+			cout << "Nie ma takiej odpowiedzi! SprÃ³buj ponownie" << endl;
 		else
 		{
-			cout << endl << "Z³a odpowiedŸ!" << endl << endl;
-			cout << "Poprawna odpowiedŸ: " << pr[losPytanie] << endl;
+			cout << endl << "ZÅ‚a odpowiedÅº!" << endl << endl;
+			cout << "Poprawna odpowiedÅº: " << pr[losPytanie] << endl;
 			porazki++;
 			Sleep(1000);
 		}
@@ -1765,16 +1765,16 @@ void pyt11()
 	int losPytanie;
 	losPytanie = pyt(generator);
 start:
-	string Pytanie[10]{ "W oryginalnej trylogii 'Gwiezdne wojny' 3-CPO ma srebrn¹: ","W której ksi¹¿ce pojawia sie postaæ Winstona Smitha?","Która z tych liczb jest wynikiem dzia³ania '5!'?","Ichtiologia to nauka o:","Grupa instrumentów muzycznych w których Ÿród³em dŸwiêku jest cia³o sta³e maj¹ce niezmienn¹, naturaln¹ sprê¿ystoœæ, to:","Dokoñcz przys³owie 'Deszcze listopadowe...'","Wêgierski taniec narodowy, to:","Kto stworzy³ fikcyjn¹ postaæ Josefa Szwejka w antywojennej powieœci „Przygody dobrego wojaka Szwejka”?","Autorem obrazu 'Mleczarka' jest:","Kumys powstaje w wyniku fermentacji mleka:" };
+	string Pytanie[10]{ "W oryginalnej trylogii 'Gwiezdne wojny' 3-CPO ma srebrnÄ…: ","W ktÃ³rej ksiÄ…Å¼ce pojawia sie postaÄ‡ Winstona Smitha?","KtÃ³ra z tych liczb jest wynikiem dziaÅ‚ania '5!'?","Ichtiologia to nauka o:","Grupa instrumentÃ³w muzycznych w ktÃ³rych ÅºrÃ³dÅ‚em dÅºwiÄ™ku jest ciaÅ‚o staÅ‚e majÄ…ce niezmiennÄ…, naturalnÄ… sprÄ™Å¼ystoÅ›Ä‡, to:","DokoÅ„cz przysÅ‚owie 'Deszcze listopadowe...'","WÄ™gierski taniec narodowy, to:","Kto stworzyÅ‚ fikcyjnÄ… postaÄ‡ Josefa Szwejka w antywojennej powieÅ›ci â€žPrzygody dobrego wojaka Szwejkaâ€?","Autorem obrazu 'Mleczarka' jest:","Kumys powstaje w wyniku fermentacji mleka:" };
 	int prawidlowa = odp(generator);
 	int licznik = 0, fifty_fifty;
 	int los, zamiana, bylo[4]{ 5,5,5,5 };
 	char abcd[4]{ 'a','b','c','d' };
-	string pr[10]{ "Praw¹ nogê",  "Rok 1984",  "120",  "Rybach",  "Idiofony",  "budz¹ wiatry zimowe",  "Czardasz",  "Jaroslav Hasek",  "Jan Vermeer",  "Koñskiego", };
-	string f1[10]{ "Praw¹ rêkê","Proces","5", "Pszczo³ach", "Aerofony", "wró¿¹ upa³y marcowe", "Trepak", "Karel Capek", "Peter Paul Rubens", "Oœlego", };
-	string f2[10]{ "G³owê","Fahrenheit 451","25", "Wulkanach", "Chordofony", "wró¿¹ k³opoty drogowe", "Kozak", "Stanis³aw Kostka Neumann", "Rembrandt van Rijn", "Krowiego", };
-	string f3[10]{ "Szczêkê","Solaris","3125", "Lasach", "Membranofony", "œci¹gaj¹ chmury œniegowe", "Hajduk", "Julius Fucik", "Frans Hals", "KoŸlego", };
-	string f4[10]{ "Klatkê piersiow¹","Moskva","125", "Morzach i oceanach", "Instrumenty perkusyjne", "wró¿¹ œwiêta bezœniegowe", "Syrba", "Lubomir Benes", "Nicolaes Maes", "Owczego", };
+	string pr[10]{ "PrawÄ… nogÄ™",  "Rok 1984",  "120",  "Rybach",  "Idiofony",  "budzÄ… wiatry zimowe",  "Czardasz",  "Jaroslav Hasek",  "Jan Vermeer",  "KoÅ„skiego", };
+	string f1[10]{ "PrawÄ… rÄ™kÄ™","Proces","5", "PszczoÅ‚ach", "Aerofony", "wrÃ³Å¼Ä… upaÅ‚y marcowe", "Trepak", "Karel Capek", "Peter Paul Rubens", "OÅ›lego", };
+	string f2[10]{ "GÅ‚owÄ™","Fahrenheit 451","25", "Wulkanach", "Chordofony", "wrÃ³Å¼Ä… kÅ‚opoty drogowe", "Kozak", "StanisÅ‚aw Kostka Neumann", "Rembrandt van Rijn", "Krowiego", };
+	string f3[10]{ "SzczÄ™kÄ™","Solaris","3125", "Lasach", "Membranofony", "Å›ciÄ…gajÄ… chmury Å›niegowe", "Hajduk", "Julius Fucik", "Frans Hals", "KoÅºlego", };
+	string f4[10]{ "KlatkÄ™ piersiowÄ…","Moskva","125", "Morzach i oceanach", "Instrumenty perkusyjne", "wrÃ³Å¼Ä… Å›wiÄ™ta bezÅ›niegowe", "Syrba", "Lubomir Benes", "Nicolaes Maes", "Owczego", };
 	string tab[4]{};
 	while (licznik < 4)
 	{
@@ -1808,8 +1808,8 @@ start:
 	tab[prawidlowa] = pr[losPytanie];
 	do {
 		pytanie:
-		cout << "Zdobyta suma pieniêdzy: 250 000z³. Kwota gwarantowana: 40 000z³" << endl << endl;
-		cout << endl << "Ko³a ratunkowe: " << kolaRatunkowe << endl << endl << "Pytanie 11: " << Pytanie[losPytanie] <<endl;
+		cout << "Zdobyta suma pieniÄ™dzy: 250 000zÅ‚. Kwota gwarantowana: 40 000zÅ‚" << endl << endl;
+		cout << endl << "KoÅ‚a ratunkowe: " << kolaRatunkowe << endl << endl << "Pytanie 11: " << Pytanie[losPytanie] <<endl;
 		
 		for (int i = 0; i < 4; i++)
 		{
@@ -1818,10 +1818,10 @@ start:
 		}
 		if (kolaRatunkowe != 0)
 		{
-			cout << endl << "Wybierz 'k', aby u¿yæ ko³a ratunkowego 50/50. Nie bêdziesz móg³ potem u¿yæ ko³a 'Zmiana pytania'." << endl;
-			cout << "Wybierz 'l', aby u¿yæ ko³a ratunkowego 'Zmiana pytania'. Mo¿esz go u¿yæ wielokrotnie i u¿yæ ko³a 50/50" << endl;
+			cout << endl << "Wybierz 'k', aby uÅ¼yÄ‡ koÅ‚a ratunkowego 50/50. Nie bÄ™dziesz mÃ³gÅ‚ potem uÅ¼yÄ‡ koÅ‚a 'Zmiana pytania'." << endl;
+			cout << "Wybierz 'l', aby uÅ¼yÄ‡ koÅ‚a ratunkowego 'Zmiana pytania'. MoÅ¼esz go uÅ¼yÄ‡ wielokrotnie i uÅ¼yÄ‡ koÅ‚a 50/50" << endl;
 		}
-		cout << endl << "Podaj odpowiedŸ: ";
+		cout << endl << "Podaj odpowiedÅº: ";
 		char odpowiedz;
 		cin >> odpowiedz;
 
@@ -1848,7 +1848,7 @@ start:
 				{
 					Sleep(1000);
 					system("cls");
-					cout << "Zdobyta suma pieniêdzy: 250 000z³. Kwota gwarantowana: 40 000z³" << endl << endl;
+					cout << "Zdobyta suma pieniÄ™dzy: 250 000zÅ‚. Kwota gwarantowana: 40 000zÅ‚" << endl << endl;
 					cout << "Pytanie 11: " << Pytanie[losPytanie]<< endl;
 					if (fifty_fifty == 0)
 					{
@@ -1862,7 +1862,7 @@ start:
 						cout << "b) " << pr[losPytanie] << endl;
 						prawidlowa = 1;
 					}
-					cout << endl << "Podaj odpowiedŸ: ";
+					cout << endl << "Podaj odpowiedÅº: ";
 					cin >> odpowiedz;
 
 					if (odpowiedz == 'a' || odpowiedz == 'A')
@@ -1872,11 +1872,11 @@ start:
 					else if (odpowiedz == 'k' || odpowiedz == 'K')
 					{
 						zamiana = 5;
-						cout << " Ju¿ u¿y³eœ ko³a ratunkowego, spróbuj ponownie!" << endl;
+						cout << " JuÅ¼ uÅ¼yÅ‚eÅ› koÅ‚a ratunkowego, sprÃ³buj ponownie!" << endl;
 					}
 					else
 					{
-						cout << " Nie ma takiej odpowiedzi, spróbuj ponownie!" << endl;
+						cout << " Nie ma takiej odpowiedzi, sprÃ³buj ponownie!" << endl;
 						zamiana = 5;
 					}
 					kolaRatunkowe--;
@@ -1885,7 +1885,7 @@ start:
 			}
 			else
 			{
-				cout << "Nie masz ju¿ kó³ ratunkowych!" << endl;
+				cout << "Nie masz juÅ¼ kÃ³Å‚ ratunkowych!" << endl;
 				Sleep(1000);
 				system("cls");
 				goto pytanie;
@@ -1904,7 +1904,7 @@ start:
 			}
 			else
 			{
-				cout << "Nie masz ju¿ kó³ ratunkowych!";
+				cout << "Nie masz juÅ¼ kÃ³Å‚ ratunkowych!";
 				Sleep(2000);
 				system("cls");
 				goto pytanie;
@@ -1915,15 +1915,15 @@ start:
 
 		if (zamiana == prawidlowa)
 		{
-			cout << endl << "Dobra odpowiedŸ!" << endl << endl;
+			cout << endl << "Dobra odpowiedÅº!" << endl << endl;
 			zwyciestwa++;
 		}
 		else if (zamiana == 5)
-			cout << "Nie ma takiej odpowiedzi! Spróbuj ponownie" << endl;
+			cout << "Nie ma takiej odpowiedzi! SprÃ³buj ponownie" << endl;
 		else
 		{
-			cout << endl << "Z³a odpowiedŸ!" << endl << endl;
-			cout << "Poprawna odpowiedŸ: " << pr[losPytanie] << endl;
+			cout << endl << "ZÅ‚a odpowiedÅº!" << endl << endl;
+			cout << "Poprawna odpowiedÅº: " << pr[losPytanie] << endl;
 			porazki++;
 			Sleep(1000);
 		}
@@ -1937,16 +1937,16 @@ void pyt12()
 	int losPytanie;
 	losPytanie = pyt(generator);
 start:
-	string Pytanie[10]{ "Co na Ksiê¿ycu zrobi³ Alan Shepard?","Ile edycji Miêdzynarodowego Konkursu Pianistycznego im. Fryderyka Chopina odby³o sie do 2016 r.?","Ile wynosi rekord dni bez snu?","Œrednia d³ugoœæ jelita cienkiego wynosi:","Jak nazwano najstarsz¹, znan¹ pramatkê cz³owieka?","KMnO4 to wzór","Kto jest autorem obrazu 'Adele Bloch - Bauer I'?","Grupa funkcyjna -COOH jest charakterystyczna dla:","Ile razy Franklin Roosevelt pe³ni³ kadencjê prezydenck¹?","Hrabina Natasza Rostowa jest g³ówn¹ bohaterk¹ powieœci:" };
+	string Pytanie[10]{ "Co na KsiÄ™Å¼ycu zrobiÅ‚ Alan Shepard?","Ile edycji MiÄ™dzynarodowego Konkursu Pianistycznego im. Fryderyka Chopina odbyÅ‚o sie do 2016 r.?","Ile wynosi rekord dni bez snu?","Åšrednia dÅ‚ugoÅ›Ä‡ jelita cienkiego wynosi:","Jak nazwano najstarszÄ…, znanÄ… pramatkÄ™ czÅ‚owieka?","KMnO4 to wzÃ³r","Kto jest autorem obrazu 'Adele Bloch - Bauer I'?","Grupa funkcyjna -COOH jest charakterystyczna dla:","Ile razy Franklin Roosevelt peÅ‚niÅ‚ kadencjÄ™ prezydenckÄ…?","Hrabina Natasza Rostowa jest gÅ‚Ã³wnÄ… bohaterkÄ… powieÅ›ci:" };
 	int prawidlowa = odp(generator);
 	int licznik = 0, fifty_fifty;
 	int los, zamiana, bylo[4]{ 5,5,5,5 };
 	char abcd[4]{ 'a','b','c','d' };
-	string pr[10]{ "Zagra³ w golfa",  "17",  "11",  "5-6 m",  "Lucy",  "Nadmanganianu potasu",  "Gustav Klimt",  "Kwasów karboksylowych",  "4",  "Wojna i pokój", };
-	string f1[10]{ "Zaœpiewa³","40","20", "2-3 m", "Bella", "Chlorku potasu", "Edward Munch", "Alkoholi", "1", "Zbrodnia i kara", };
-	string f2[10]{ "Zrobi³ kilka pajacyków","25","4", "10-11 m", "Fiona", "P³ynu Lugola", "Claude Monet", "Estrów", "2", "Anna Karenina", };
-	string f3[10]{ "Zatañczyl","10","9", "7-8 m", "Amy", "Sody oczyszczonej", "Henri Matisse", "Soli", "3", "Eugeniusz Oniegin", };
-	string f4[10]{ "Rzuci³ frisbee","20","10", "17-18 m", "Holy", "Cieczy nienutonowskiej", "Salvador Dali", "Zasad", "5", "Granica", };
+	string pr[10]{ "ZagraÅ‚ w golfa",  "17",  "11",  "5-6 m",  "Lucy",  "Nadmanganianu potasu",  "Gustav Klimt",  "KwasÃ³w karboksylowych",  "4",  "Wojna i pokÃ³j", };
+	string f1[10]{ "ZaÅ›piewaÅ‚","40","20", "2-3 m", "Bella", "Chlorku potasu", "Edward Munch", "Alkoholi", "1", "Zbrodnia i kara", };
+	string f2[10]{ "ZrobiÅ‚ kilka pajacykÃ³w","25","4", "10-11 m", "Fiona", "PÅ‚ynu Lugola", "Claude Monet", "EstrÃ³w", "2", "Anna Karenina", };
+	string f3[10]{ "ZataÅ„czyl","10","9", "7-8 m", "Amy", "Sody oczyszczonej", "Henri Matisse", "Soli", "3", "Eugeniusz Oniegin", };
+	string f4[10]{ "RzuciÅ‚ frisbee","20","10", "17-18 m", "Holy", "Cieczy nienutonowskiej", "Salvador Dali", "Zasad", "5", "Granica", };
 	string tab[4]{};
 	while (licznik < 4)
 	{
@@ -1980,8 +1980,8 @@ start:
 	tab[prawidlowa] = pr[losPytanie];
 	do {
 		pytanie:
-		cout << "Zdobyta suma pieniêdzy: 500 000z³. Kwota gwarantowana: 40 000z³" << endl << endl;
-		cout << endl << "Ko³a ratunkowe: " << kolaRatunkowe << endl << endl << "Pytanie 12: " << Pytanie[losPytanie] <<endl;
+		cout << "Zdobyta suma pieniÄ™dzy: 500 000zÅ‚. Kwota gwarantowana: 40 000zÅ‚" << endl << endl;
+		cout << endl << "KoÅ‚a ratunkowe: " << kolaRatunkowe << endl << endl << "Pytanie 12: " << Pytanie[losPytanie] <<endl;
 		
 		for (int i = 0; i < 4; i++)
 		{
@@ -1990,10 +1990,10 @@ start:
 		}
 		if (kolaRatunkowe != 0)
 		{
-			cout << endl << "Wybierz 'k', aby u¿yæ ko³a ratunkowego 50/50. Nie bêdziesz móg³ potem u¿yæ ko³a 'Zmiana pytania'." << endl;
-			cout << "Wybierz 'l', aby u¿yæ ko³a ratunkowego 'Zmiana pytania'. Mo¿esz go u¿yæ wielokrotnie i u¿yæ ko³a 50/50" << endl;
+			cout << endl << "Wybierz 'k', aby uÅ¼yÄ‡ koÅ‚a ratunkowego 50/50. Nie bÄ™dziesz mÃ³gÅ‚ potem uÅ¼yÄ‡ koÅ‚a 'Zmiana pytania'." << endl;
+			cout << "Wybierz 'l', aby uÅ¼yÄ‡ koÅ‚a ratunkowego 'Zmiana pytania'. MoÅ¼esz go uÅ¼yÄ‡ wielokrotnie i uÅ¼yÄ‡ koÅ‚a 50/50" << endl;
 		}
-		cout << endl << "Podaj odpowiedŸ: ";
+		cout << endl << "Podaj odpowiedÅº: ";
 		char odpowiedz;
 		cin >> odpowiedz;
 
@@ -2020,7 +2020,7 @@ start:
 				{
 					Sleep(1000);
 					system("cls");
-					cout << "Zdobyta suma pieniêdzy: 500 000z³. Kwota gwarantowana: 40 000z³" << endl << endl;
+					cout << "Zdobyta suma pieniÄ™dzy: 500 000zÅ‚. Kwota gwarantowana: 40 000zÅ‚" << endl << endl;
 					cout << "Pytanie 12: " << Pytanie[losPytanie]<< endl;
 					if (fifty_fifty == 0)
 					{
@@ -2034,7 +2034,7 @@ start:
 						cout << "b) " << pr[losPytanie] << endl;
 						prawidlowa = 1;
 					}
-					cout << endl << "Podaj odpowiedŸ: ";
+					cout << endl << "Podaj odpowiedÅº: ";
 					cin >> odpowiedz;
 
 					if (odpowiedz == 'a' || odpowiedz == 'A')
@@ -2044,11 +2044,11 @@ start:
 					else if (odpowiedz == 'k' || odpowiedz == 'K')
 					{
 						zamiana = 5;
-						cout << " Ju¿ u¿y³eœ ko³a ratunkowego, spróbuj ponownie!" << endl;
+						cout << " JuÅ¼ uÅ¼yÅ‚eÅ› koÅ‚a ratunkowego, sprÃ³buj ponownie!" << endl;
 					}
 					else
 					{
-						cout << " Nie ma takiej odpowiedzi, spróbuj ponownie!" << endl;
+						cout << " Nie ma takiej odpowiedzi, sprÃ³buj ponownie!" << endl;
 						zamiana = 5;
 					}
 					kolaRatunkowe--;
@@ -2057,7 +2057,7 @@ start:
 			}
 			else
 			{
-				cout << "Nie masz ju¿ kó³ ratunkowych!" << endl;
+				cout << "Nie masz juÅ¼ kÃ³Å‚ ratunkowych!" << endl;
 				Sleep(1000);
 				system("cls");
 				goto pytanie;
@@ -2076,7 +2076,7 @@ start:
 			}
 			else
 			{
-				cout << "Nie masz ju¿ kó³ ratunkowych!";
+				cout << "Nie masz juÅ¼ kÃ³Å‚ ratunkowych!";
 				Sleep(2000);
 				system("cls");
 				goto pytanie;
@@ -2087,15 +2087,15 @@ start:
 
 		if (zamiana == prawidlowa)
 		{
-			cout << endl << "Dobra odpowiedŸ!" << endl << endl;
+			cout << endl << "Dobra odpowiedÅº!" << endl << endl;
 			zwyciestwa++;
 		}
 		else if (zamiana == 5)
-			cout << "Nie ma takiej odpowiedzi! Spróbuj ponownie" << endl;
+			cout << "Nie ma takiej odpowiedzi! SprÃ³buj ponownie" << endl;
 		else
 		{
-			cout << endl << "Z³a odpowiedŸ!" << endl << endl;
-			cout << "Poprawna odpowiedŸ: " << pr[losPytanie] << endl;
+			cout << endl << "ZÅ‚a odpowiedÅº!" << endl << endl;
+			cout << "Poprawna odpowiedÅº: " << pr[losPytanie] << endl;
 			porazki++;
 			Sleep(1000);
 		}
@@ -2113,19 +2113,19 @@ void historia()
 	{
 		Historia.seekg(0, ios::end);
 		if (Historia.tellg() == 0) {
-			cout << "Historia jest pusta, zagraj, ¿eby dodaæ wynik!\n";
+			cout << "Historia jest pusta, zagraj, Å¼eby dodaÄ‡ wynik!\n";
 		}
 		 
 		else {Historia.seekg(0, ios::beg);
 			while (!Historia.eof())
 			{
 				getline(Historia, pobranie);
-				dlugosc = pobranie.size();// d³ugoœæ nazwy u¿ytkownika
+				dlugosc = pobranie.size();// dÅ‚ugoÅ›Ä‡ nazwy uÅ¼ytkownika
 				if (pobranie[dlugosc - 2] == ' ')//wynik 1-cyfrowy
 				{
 					zwyciestwo = pobranie.substr(dlugosc - 1);// oddzielenie wyniku i zapisanie do stringa
-					wynik[indeks] = stoi(zwyciestwo);//zmienienie stringa na inta i wpisanie do tablicy wyników
-					uzytkownik[indeks] = pobranie.substr(0, dlugosc - 1);// oddzielenie nazwy u¿ytkownika i zapisaniedo tablicy
+					wynik[indeks] = stoi(zwyciestwo);//zmienienie stringa na inta i wpisanie do tablicy wynikÃ³w
+					uzytkownik[indeks] = pobranie.substr(0, dlugosc - 1);// oddzielenie nazwy uÅ¼ytkownika i zapisaniedo tablicy
 				}
 				else if (pobranie[dlugosc - 3] == ' ')//wynik 2-cyfrowy
 				{
@@ -2144,17 +2144,17 @@ void historia()
 		
 	}
 	else
-		cout << "Nie mo¿na otworzyæ pliku" << endl;
+		cout << "Nie moÅ¼na otworzyÄ‡ pliku" << endl;
 	Historia.close();
 	int numeracja=1;
-	int NajdluzszyUzytkownik = 0;// najdlu¿sza nazwa u¿ytkownika 
+	int NajdluzszyUzytkownik = 0;// najdluÅ¼sza nazwa uÅ¼ytkownika 
 	for (int i = 0; i < indeks; i++)
 	{
 		if (NajdluzszyUzytkownik < uzytkownik[i].size())
 			NajdluzszyUzytkownik = uzytkownik[i].size();
 
 	}
-	for (int i = indeks-1; i >=0; i--)// wypisanie w takie sposób, ¿eby wyniki by³y równo
+	for (int i = indeks-1; i >=0; i--)// wypisanie w takie sposÃ³b, Å¼eby wyniki byÅ‚y rÃ³wno
 	{
 		
 		
@@ -2170,7 +2170,7 @@ void Gra()
 		Historia.open("Historia.txt", ios::out | ios::app);
 		system("cls");
 		CzyChceGrac = true;
-		while (CzyChceGrac)// pêtla wykonuje siê dpóki u¿ytkownik chce kontynuowac grê
+		while (CzyChceGrac)// pÄ™tla wykonuje siÄ™ dpÃ³ki uÅ¼ytkownik chce kontynuowac grÄ™
 		{
 			
 
@@ -2178,8 +2178,8 @@ void Gra()
 			while (uzytkownik.size() == 0)
 			{
 				system("cls");
-				cout << "Podaj nazwê u¿ytkownika (bez polskich znaków): ";
-				getline(cin, uzytkownik);//pobranie nazwy u¿ytkownika
+				cout << "Podaj nazwÄ™ uÅ¼ytkownika (bez polskich znakÃ³w): ";
+				getline(cin, uzytkownik);//pobranie nazwy uÅ¼ytkownika
 				
 			}
 			
@@ -2190,15 +2190,15 @@ void Gra()
 			Historia.seekg(0, ios::end);
 			if (Historia.tellg() == 0) 
 			{
-			Historia << uzytkownik;//zapisanie u¿ytkownika do pliku
+			Historia << uzytkownik;//zapisanie uÅ¼ytkownika do pliku
 				
 			}
 			else
 			{
-				Historia << endl << uzytkownik;//zapisanie u¿ytkownika do pliku
+				Historia << endl << uzytkownik;//zapisanie uÅ¼ytkownika do pliku
 			}
 			pyt1();
-			while (porazki < 2)// pêtla siê wykonuje a¿ pora¿ki nie wynios¹ 1 wtedy wyœwietla siê komunikat o koñcu gry
+			while (porazki < 2)// pÄ™tla siÄ™ wykonuje aÅ¼ poraÅ¼ki nie wyniosÄ… 1 wtedy wyÅ›wietla siÄ™ komunikat o koÅ„cu gry
 			{
 				if (porazki == 0 && zwyciestwa == 1)
 					pyt2();
@@ -2226,77 +2226,77 @@ void Gra()
 				{
 					cout << "Koniec gry!" << endl;
 					if (zwyciestwa == 0 || zwyciestwa == 1)
-						cout << "Nic nie wygra³eœ!" << endl;
+						cout << "Nic nie wygraÅ‚eÅ›!" << endl;
 					else if (zwyciestwa < 7)
 					{
-						cout << "Wygra³eœ 1000 z³!" << endl;
+						cout << "WygraÅ‚eÅ› 1000 zÅ‚!" << endl;
 					}
 					else if (zwyciestwa >= 7)
 					{
-						cout << "Wygra³eœ 40 000 z³!" << endl;
+						cout << "WygraÅ‚eÅ› 40 000 zÅ‚!" << endl;
 					}
 					porazki = 2;
 				}
 				else if (zwyciestwa == 12)
 				{
-					cout << "Gratulacje! Wygra³eœ milion!" << endl;
+					cout << "Gratulacje! WygraÅ‚eÅ› milion!" << endl;
 					porazki = 2;
 				}
 			}
 
-			getline(cin, czychcegrac);// pozbycie siê \n w buforze
+			getline(cin, czychcegrac);// pozbycie siÄ™ \n w buforze
 
-			while (checGry == 1)// pêtla wykonuje siê tak d³ugo, a¿ u¿ytkownik poda jedn¹ z oczekiwanych odpowiedzi
+			while (checGry == 1)// pÄ™tla wykonuje siÄ™ tak dÅ‚ugo, aÅ¼ uÅ¼ytkownik poda jednÄ… z oczekiwanych odpowiedzi
 			{
-				cout << endl << "Czy chcesz zagraæ jeszcze raz?" << endl << "Wpisz 'tak' lub 'nie': " << endl;
-				getline(cin, czychcegrac);// czy u¿ytkonik chce dalej graæ
+				cout << endl << "Czy chcesz zagraÄ‡ jeszcze raz?" << endl << "Wpisz 'tak' lub 'nie': " << endl;
+				getline(cin, czychcegrac);// czy uÅ¼ytkonik chce dalej graÄ‡
 				if (czychcegrac == "tak" || czychcegrac == "Tak" || czychcegrac == "tAk" || czychcegrac == "taK" || czychcegrac == "TAk" || czychcegrac == "tAK" || czychcegrac == "TAK" || czychcegrac == "TaK")
 				{
 					checGry++;//CzyChceGrac pozostaje true
 				}
 				else if (czychcegrac == "nie" || czychcegrac == "Nie" || czychcegrac == "nIe" || czychcegrac == "niE" || czychcegrac == "NIe" || czychcegrac == "nIE" || czychcegrac == "NIE" || czychcegrac == "NiE")
 				{
-					CzyChceGrac = false;//pêtla gry siê przerywa
+					CzyChceGrac = false;//pÄ™tla gry siÄ™ przerywa
 					checGry++;
 
 				}
 				else
 				{
-					cout << "Nie rozumiem, spróbuj ponownie: " << endl;
+					cout << "Nie rozumiem, sprÃ³buj ponownie: " << endl;
 					Sleep(2000);
 					system("cls");
 				}
 			}
 
 
-			Historia << ":  " << zwyciestwa;//dopisanie wyniku do nazwy u¿ytkownika
+			Historia << ":  " << zwyciestwa;//dopisanie wyniku do nazwy uÅ¼ytkownika
 			checGry = 1;
 			porazki = 0;
 			zwyciestwa = 0;
-			kolaRatunkowe = 3;// ustawienie wszytskiego na wartoœæ domyœln¹
+			kolaRatunkowe = 3;// ustawienie wszytskiego na wartoÅ›Ä‡ domyÅ›lnÄ…
 		}
 		Historia.close();
 		system("cls");
-		cout << endl << "Dziêkujê za grê!" << endl;
+		cout << endl << "DziÄ™kujÄ™ za grÄ™!" << endl;
 		Sleep(2000);
 		system("cls");
 	}
-char Menu()// pobranie decyzji u¿ytkownika
+char Menu()// pobranie decyzji uÅ¼ytkownika
 {
 	
 	char decyzja;
-	//cout << "Co chcesz zrobiæ? \n\nWpisz 1, aby zagraæ.\nWpisz 2, aby wyœwietliæ historiê gier.\nWpisz 3, aby wyœwietliæ zasady.\nWpisz 4, aby wyœwietliæ top 10 graczy.\nWpisz 5, aby zakoñczyæ." << endl;
+	//cout << "Co chcesz zrobiÄ‡? \n\nWpisz 1, aby zagraÄ‡.\nWpisz 2, aby wyÅ›wietliÄ‡ historiÄ™ gier.\nWpisz 3, aby wyÅ›wietliÄ‡ zasady.\nWpisz 4, aby wyÅ›wietliÄ‡ top 10 graczy.\nWpisz 5, aby zakoÅ„czyÄ‡." << endl;
 	decyzja = _getch();
 	return decyzja;
 	
 }
-void Zasady()//wyœwietlenie zasad gry
+void Zasady()//wyÅ›wietlenie zasad gry
 {
-	cout << "Zasady s¹ bardzo proste:" << endl << "1. Jest 12 losowych pytañ, ka¿de kolejne jest trudniejsze od poprzedniego" << endl;
-	cout << "2. Za ka¿d¹ poprawn¹ odpowiedŸ otrzymuje siê coraz wiêksz¹ kwotê. Jest te¿ kwota gwarantowana, któr¹ otrzymuje siê po przegranej." << endl;
-	cout << "3. Do dyspozycji s¹ dwa ko³a ratunkowe: 50/50 oraz 'Zamiana pytania'. Pierwsze wyœwietla jedn¹ odpowiedŸ poprawn¹ i jedn¹ fa³szyw¹. Drugie losuje inne pytanie" << endl;
-	cout << "4. £¹cznie kó³ ratunkowych mo¿na u¿yæ 3 razy, jednak u¿ycie 50/50 uniemo¿liwia u¿ycie go ponownie w tym samym pytaniu lub wylosowanie innego." << endl;
-	cout << "5. Zamiany pytania mo¿na u¿yæ wielokrotnie, dopóki dostêpne s¹ ko³a ratunkowe" << endl;
+	cout << "Zasady sÄ… bardzo proste:" << endl << "1. Jest 12 losowych pytaÅ„, kaÅ¼de kolejne jest trudniejsze od poprzedniego" << endl;
+	cout << "2. Za kaÅ¼dÄ… poprawnÄ… odpowiedÅº otrzymuje siÄ™ coraz wiÄ™kszÄ… kwotÄ™. Jest teÅ¼ kwota gwarantowana, ktÃ³rÄ… otrzymuje siÄ™ po przegranej." << endl;
+	cout << "3. Do dyspozycji sÄ… dwa koÅ‚a ratunkowe: 50/50 oraz 'Zamiana pytania'. Pierwsze wyÅ›wietla jednÄ… odpowiedÅº poprawnÄ… i jednÄ… faÅ‚szywÄ…. Drugie losuje inne pytanie" << endl;
+	cout << "4. ÅÄ…cznie kÃ³Å‚ ratunkowych moÅ¼na uÅ¼yÄ‡ 3 razy, jednak uÅ¼ycie 50/50 uniemoÅ¼liwia uÅ¼ycie go ponownie w tym samym pytaniu lub wylosowanie innego." << endl;
+	cout << "5. Zamiany pytania moÅ¼na uÅ¼yÄ‡ wielokrotnie, dopÃ³ki dostÄ™pne sÄ… koÅ‚a ratunkowe" << endl;
 }
 void top10()
 {
@@ -2307,20 +2307,21 @@ void top10()
 	{
 		Historia.seekg(0, ios::end);
 		if (Historia.tellg() == 0) {
-			cout << "Historia jest pusta, zagraj, ¿eby dodaæ wynik!\n";
+			cout << "Historia jest pusta, zagraj, Å¼eby dodaÄ‡ wynik!\n";
 		}
 
 		else
 		{
+		Historia.seekg(0, ios::beg);
 		while (!Historia.eof())
 		{
 			getline(Historia, pobranie);
-			dlugosc = pobranie.size();// d³ugoœæ nazwy u¿ytkownika
+			dlugosc = pobranie.size();// dÅ‚ugoÅ›Ä‡ nazwy uÅ¼ytkownika
 			if(pobranie[dlugosc -2]== ' ')//wynik 1-cyfrowy
 			{
 				zwyciestwo = pobranie.substr(dlugosc - 1);// oddzielenie wyniku i zapisanie do stringa
-				wynik[indeks] = stoi(zwyciestwo);//zmienienie stringa na inta i wpisanie do tablicy wyników
-				uzytkownik[indeks] = pobranie.substr(0, dlugosc - 1);// oddzielenie nazwy u¿ytkownika i zapisaniedo tablicy
+				wynik[indeks] = stoi(zwyciestwo);//zmienienie stringa na inta i wpisanie do tablicy wynikÃ³w
+				uzytkownik[indeks] = pobranie.substr(0, dlugosc - 1);// oddzielenie nazwy uÅ¼ytkownika i zapisaniedo tablicy
 			}
 			else if (pobranie[dlugosc - 3] == ' ')//wynik 2-cyfrowy
 			{
@@ -2333,13 +2334,13 @@ void top10()
 		}
 	}
 	else
-		cout << "Nie mo¿na otworzyæ pliku" << endl;
+		cout << "Nie moÅ¼na otworzyÄ‡ pliku" << endl;
 	Historia.close();
 
 	int zamiana;
 	string zam;
 	bool czyPokolei = false;
-	while (czyPokolei == false)//sortowanie u¿ytkowników i ich wyników
+	while (czyPokolei == false)//sortowanie uÅ¼ytkownikÃ³w i ich wynikÃ³w
 	{
 		czyPokolei = true;
 		for (int i = 0; i <= indeks; i++)
@@ -2356,14 +2357,14 @@ void top10()
 			}
 		}
 	}
-	int NajdluzszyUzytkownik = 0;// najdlu¿sza nazwa u¿ytkownika 
+	int NajdluzszyUzytkownik = 0;// najdluÅ¼sza nazwa uÅ¼ytkownika 
 	for (int i = 0; i < indeks; i++)
 	{
 		if (NajdluzszyUzytkownik < uzytkownik[i].size())
 			NajdluzszyUzytkownik = uzytkownik[i].size();
 
 	}
-	for (int i = 0; i < indeks; i++)// wypisanie w takie sposób, ¿eby wyniki by³y równo
+	for (int i = 0; i < indeks; i++)// wypisanie w takie sposÃ³b, Å¼eby wyniki byÅ‚y rÃ³wno
 	{
 		if (i < 10)// wypisanie tylko 10
 		{
@@ -2379,29 +2380,29 @@ void top10()
 int main()
 {
 	cout << endl;
-	cout << "ÛÛÛ»°°°ÛÛÛ»ÛÛ»ÛÛ»°°°°°ÛÛ»°ÛÛÛÛÛ»°ÛÛÛ»°°ÛÛ»ÛÛÛÛÛÛÛ»ÛÛÛÛÛÛ»°ÛÛÛÛÛÛÛ»ÛÛ»°°°ÛÛ»ÛÛ»" << endl;//wielki napis Milionerzy
-	cout << "ÛÛÛÛ»°ÛÛÛÛºÛÛºÛÛº°°°°°ÛÛºÛÛÉÍÍÛÛ»ÛÛÛÛ»°ÛÛºÛÛÉÍÍÍÍ¼ÛÛÉÍÍÛÛ»ÈÍÍÍÍÛÛºÈÛÛ»°ÛÛÉ¼ÛÛº" << endl;
-	cout << "ÛÛÉÛÛÛÛÉÛÛºÛÛºÛÛº°°°°°ÛÛºÛÛº°°ÛÛºÛÛÉÛÛ»ÛÛºÛÛÛÛÛ»°°ÛÛÛÛÛÛÉ¼°°ÛÛÛÉÍ¼°ÈÛÛÛÛÉ¼°ÛÛº" << endl;
-	cout << "ÛÛºÈÛÛÉ¼ÛÛºÛÛºÛÛº°°°°°ÛÛºÛÛº°°ÛÛºÛÛºÈÛÛÛÛºÛÛÉÍÍ¼°°ÛÛÉÍÍÛÛ»ÛÛÉÍÍ¼°°°°ÈÛÛÉ¼°°ÈÍ¼" << endl;
-	cout << "ÛÛº°ÈÍ¼°ÛÛºÛÛºÛÛÛÛÛÛÛ»ÛÛºÈÛÛÛÛÛÉ¼ÛÛº°ÈÛÛÛºÛÛÛÛÛÛÛ»ÛÛº°°ÛÛºÛÛÛÛÛÛÛ»°°°ÛÛº°°°ÛÛ»" << endl;
-	cout << "ÈÍ¼°°°°°ÈÍ¼ÈÍ¼ÈÍÍÍÍÍÍ¼ÈÍ¼°ÈÍÍÍÍ¼°ÈÍ¼°°ÈÍÍ¼ÈÍÍÍÍÍÍ¼ÈÍ¼°°ÈÍ¼ÈÍÍÍÍÍÍ¼°°°ÈÍ¼°°°ÈÍ¼" << endl;
+	cout << "Å°Å°Å°Â»Â°Â°Â°Å°Å°Å°Â»Å°Å°Â»Å°Å°Â»Â°Â°Â°Â°Â°Å°Å°Â»Â°Å°Å°Å°Å°Å°Â»Â°Å°Å°Å°Â»Â°Â°Å°Å°Â»Å°Å°Å°Å°Å°Å°Å°Â»Å°Å°Å°Å°Å°Å°Â»Â°Å°Å°Å°Å°Å°Å°Å°Â»Å°Å°Â»Â°Â°Â°Å°Å°Â»Å°Å°Â»" << endl;//wielki napis Milionerzy
+	cout << "Å°Å°Å°Å°Â»Â°Å°Å°Å°Å°ÅŸÅ°Å°ÅŸÅ°Å°ÅŸÂ°Â°Â°Â°Â°Å°Å°ÅŸÅ°Å°Ã‰ÃÃÅ°Å°Â»Å°Å°Å°Å°Â»Â°Å°Å°ÅŸÅ°Å°Ã‰ÃÃÃÃÄ½Å°Å°Ã‰ÃÃÅ°Å°Â»ÄŒÃÃÃÃÅ°Å°ÅŸÄŒÅ°Å°Â»Â°Å°Å°Ã‰Ä½Å°Å°ÅŸ" << endl;
+	cout << "Å°Å°Ã‰Å°Å°Å°Å°Ã‰Å°Å°ÅŸÅ°Å°ÅŸÅ°Å°ÅŸÂ°Â°Â°Â°Â°Å°Å°ÅŸÅ°Å°ÅŸÂ°Â°Å°Å°ÅŸÅ°Å°Ã‰Å°Å°Â»Å°Å°ÅŸÅ°Å°Å°Å°Å°Â»Â°Â°Å°Å°Å°Å°Å°Å°Ã‰Ä½Â°Â°Å°Å°Å°Ã‰ÃÄ½Â°ÄŒÅ°Å°Å°Å°Ã‰Ä½Â°Å°Å°ÅŸ" << endl;
+	cout << "Å°Å°ÅŸÄŒÅ°Å°Ã‰Ä½Å°Å°ÅŸÅ°Å°ÅŸÅ°Å°ÅŸÂ°Â°Â°Â°Â°Å°Å°ÅŸÅ°Å°ÅŸÂ°Â°Å°Å°ÅŸÅ°Å°ÅŸÄŒÅ°Å°Å°Å°ÅŸÅ°Å°Ã‰ÃÃÄ½Â°Â°Å°Å°Ã‰ÃÃÅ°Å°Â»Å°Å°Ã‰ÃÃÄ½Â°Â°Â°Â°ÄŒÅ°Å°Ã‰Ä½Â°Â°ÄŒÃÄ½" << endl;
+	cout << "Å°Å°ÅŸÂ°ÄŒÃÄ½Â°Å°Å°ÅŸÅ°Å°ÅŸÅ°Å°Å°Å°Å°Å°Å°Â»Å°Å°ÅŸÄŒÅ°Å°Å°Å°Å°Ã‰Ä½Å°Å°ÅŸÂ°ÄŒÅ°Å°Å°ÅŸÅ°Å°Å°Å°Å°Å°Å°Â»Å°Å°ÅŸÂ°Â°Å°Å°ÅŸÅ°Å°Å°Å°Å°Å°Å°Â»Â°Â°Â°Å°Å°ÅŸÂ°Â°Â°Å°Å°Â»" << endl;
+	cout << "ÄŒÃÄ½Â°Â°Â°Â°Â°ÄŒÃÄ½ÄŒÃÄ½ÄŒÃÃÃÃÃÃÄ½ÄŒÃÄ½Â°ÄŒÃÃÃÃÄ½Â°ÄŒÃÄ½Â°Â°ÄŒÃÃÄ½ÄŒÃÃÃÃÃÃÄ½ÄŒÃÄ½Â°Â°ÄŒÃÄ½ÄŒÃÃÃÃÃÃÄ½Â°Â°Â°ÄŒÃÄ½Â°Â°Â°ÄŒÃÄ½" << endl;
 	
-	setlocale(LC_CTYPE, "Polish");//ustawienie polskiego jêzyka (polskie znaki)
+	setlocale(LC_CTYPE, "Polish");//ustawienie polskiego jÄ™zyka (polskie znaki)
 
-	cout << endl << endl << "Naciœnij dowolny przycisk aby rozpocz¹æ!" << endl;
+	cout << endl << endl << "NaciÅ›nij dowolny przycisk aby rozpoczÄ…Ä‡!" << endl;
 	char h;
 	h=_getch();
 	
 	system("cls");
 	
 	bool dziala = true;
-	while (dziala) //nieskoñczona pêtla, koñczy j¹ switch -> case 5
+	while (dziala) //nieskoÅ„czona pÄ™tla, koÅ„czy jÄ… switch -> case 5
 	{
-		powrót:
-		cout << "Co chcesz zrobiæ? \n\nWpisz 1, aby zagraæ.\nWpisz 2, aby wyœwietliæ zasady.\nWpisz 3, aby wyœwietliæ historiê gier.\nWpisz 4, aby wyœwietliæ top 10 graczy.\nWpisz 5, aby zakoñczyæ." << endl;
+		powrÃ³t:
+		cout << "Co chcesz zrobiÄ‡? \n\nWpisz 1, aby zagraÄ‡.\nWpisz 2, aby wyÅ›wietliÄ‡ zasady.\nWpisz 3, aby wyÅ›wietliÄ‡ historiÄ™ gier.\nWpisz 4, aby wyÅ›wietliÄ‡ top 10 graczy.\nWpisz 5, aby zakoÅ„czyÄ‡." << endl;
 
 	menu:
-			decyzja = Menu();//decyzja u¿ytkownika
+			decyzja = Menu();//decyzja uÅ¼ytkownika
 			
 			if (decyzja >= 49 && decyzja <= 53)
 			{
@@ -2409,51 +2410,51 @@ int main()
 				{
 				case '1':
 					
-					Gra();//rozpoczêcie gry
+					Gra();//rozpoczÄ™cie gry
 					break;
 				case '3':
 					
 					system("cls");//wypisanie historii gier
 					historia();
-					cout << "\nNaciœnij ENTER aby wyjœæ\n";
+					cout << "\nNaciÅ›nij ENTER aby wyjÅ›Ä‡\n";
 					while (1)
 					{
 						if (_getch() == 13)
 						{
 							system("cls");
 							
-							goto powrót;
+							goto powrÃ³t;
 						}
 					}
 				case '2':
 					
-					system("cls");//wyœwietlenie zasad
+					system("cls");//wyÅ›wietlenie zasad
 					Zasady();
-					cout << "\nNaciœnij ENTER aby wyjœæ\n";
+					cout << "\nNaciÅ›nij ENTER aby wyjÅ›Ä‡\n";
 					while (1)
 					{
 						if (_getch() == 13)
 						{
 							system("cls");
 							
-							goto powrót;
+							goto powrÃ³t;
 						}
 					}
 				case '4':
 					
-					system("cls");//wyœwietlenie 10 najlepszych wyników
+					system("cls");//wyÅ›wietlenie 10 najlepszych wynikÃ³w
 					top10();
-					cout << "\nNaciœnij ENTER aby wyjœæ\n";
+					cout << "\nNaciÅ›nij ENTER aby wyjÅ›Ä‡\n";
 					while (1)
 					{
 						if (_getch() == 13)
 						{
 							system("cls");
 							
-							goto powrót;
+							goto powrÃ³t;
 						}
 					}
-				case '5'://zamkniêcie programu
+				case '5'://zamkniÄ™cie programu
 					decyzja = 0;
 					exit(0);
 				}
