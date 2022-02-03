@@ -1,0 +1,5 @@
+﻿  Milionerzy.cpp
+C:\Users\PC-01\source\repos\Milionerzy\Milionerzy.cpp(13,23): warning C4244: "argument": konwersja z "time_t" do "unsigned int", możliwa utrata danych
+C:\Users\PC-01\source\repos\Milionerzy\Milionerzy.cpp(2153,28): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+C:\Users\PC-01\source\repos\Milionerzy\Milionerzy.cpp(2363,28): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+  Milionerzy.vcxproj -> C:\Users\PC-01\source\repos\Milionerzy\Debug\Milionerzy.exe
